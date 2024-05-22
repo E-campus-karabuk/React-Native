@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,41 @@ import {
   ScrollView,
 } from "react-native";
 import * as Keychain from "react-native-keychain";
+import * as SecureStore from "expo-secure-store";
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useLayoutEffect(() => {
+    const checkLogin = async () => {
+      const token = await SecureStore.getItemAsync("token");
+      if (token) {
+        navigation.navigate("Home");
+      }
+    };
+
+    checkLogin();
+  }, []);
+
+  const handleLogin2 = async () => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/auth/login`,
+        {
+          email: username,
+          password: password,
+        }
+      );
+
+      await SecureStore.setItemAsync("token", JSON.stringify(data?.token));
+      await SecureStore.setItemAsync("role", JSON.stringify(data?.role));
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log(error);
+      console.log(process.env.EXPO_PUBLIC_API_URL);
+    }
+  };
 
   const handleLogin = () => {
     if (
@@ -57,7 +88,7 @@ const Login = ({ navigation }) => {
           onChangeText={setPassword}
         />
         <Text style={styles.subsubtitle}>Forgot your password?</Text>
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin2}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
