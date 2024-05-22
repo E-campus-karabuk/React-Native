@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +19,7 @@ import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { WebView } from "react-native-webview";
 
 const getToken = async () => {
   const token = await SecureStore.getItemAsync("token");
@@ -132,36 +134,34 @@ const SPgroups = () => {
 
             <View style={styles.tableHeader}>
               <Text style={styles.category}>Files & Reports</Text>
-
-              <TouchableOpacity style={styles.whiteFilterButton}>
-                <Text style={styles.whiteFilterButtonText}>Add File +</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.whiteFilterButton}>
-                <Text style={styles.whiteFilterButtonText}>Filter</Text>
-                <MaterialCommunityIcons
-                  name="filter-menu"
-                  size={10}
-                  color="#C8272E"
-                />
-              </TouchableOpacity>
             </View>
             <View style={styles.card}>
               <ScrollView>
                 {reports?.map((report, index) => {
                   return (
                     <TouchableOpacity key={index} style={styles.smallcard}>
-                      <Image
-                        source={require("../assets/pdf.png")}
-                        style={styles.fileTypeImg}
-                      />
-                      <View style={styles.textContainerTable}>
-                        <Text style={styles.tableCardHeading}>
-                          {report?.title}
-                        </Text>
-                        <Text style={styles.tableCardDate}>
-                          {new Date(report.createdAt).toLocaleDateString()}
-                        </Text>
-                      </View>
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.smallcard}
+                        onPress={() =>
+                          Linking.openURL(
+                            `${process.env.EXPO_PUBLIC_API_URL}/${report?.file}`
+                          )
+                        }
+                      >
+                        <Image
+                          source={require("../assets/pdf.png")}
+                          style={styles.fileTypeImg}
+                        />
+                        <View style={styles.textContainerTable}>
+                          <Text style={styles.tableCardHeading}>
+                            {report?.title}
+                          </Text>
+                          <Text style={styles.tableCardDate}>
+                            {new Date(report.createdAt).toLocaleDateString()}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </TouchableOpacity>
                   );
                 })}
