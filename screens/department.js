@@ -237,7 +237,7 @@ const Department = () => {
                   {response?.corses?.map((course) => {
                     if (course.year == 1)
                       return (
-                        <View style={styles.smester}>
+                        <View style={styles.smester} key={course._id}>
                           <Text style={styles.semesterHeading}>
                             {course.name}
                           </Text>
@@ -279,7 +279,7 @@ const Department = () => {
                     {response?.corses?.map((course) => {
                       if (course.year == 2)
                         return (
-                          <View style={styles.smester}>
+                          <View style={styles.smester} key={course._id}>
                             <Text style={styles.semesterHeading}>
                               {course.name}
                             </Text>
@@ -320,7 +320,7 @@ const Department = () => {
                     {response?.corses?.map((course) => {
                       if (course.year == 3)
                         return (
-                          <View style={styles.smester}>
+                          <View style={styles.smester} key={course._id}>
                             <Text style={styles.semesterHeading}>
                               {course.name}
                             </Text>
@@ -361,7 +361,7 @@ const Department = () => {
                     {response?.corses?.map((course) => {
                       if (course.year == 4)
                         return (
-                          <View style={styles.smester}>
+                          <View style={styles.smester} key={course._id}>
                             <Text style={styles.semesterHeading}>
                               {course.name}
                             </Text>
