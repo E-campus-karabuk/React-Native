@@ -37,6 +37,18 @@ const Department = () => {
   const [isAutoSliding, setIsAutoSliding] = useState(true);
   const [response, setResponse] = useState(null);
 
+  const [dropdownOpenState, setDropdownOpenState] = useState({
+    firstYear: false,
+    secondYear: false,
+    thirdYear: false,
+    fourthYear: false,
+  });
+  const toggleDropdown = (year) => {
+    setDropdownOpenState((prevState) => ({
+      ...prevState,
+      [year]: !prevState[year],
+    }));
+  };
   const flatListRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -105,9 +117,6 @@ const Department = () => {
   const renderItem = ({ item }) => <Image source={item} style={styles.image} />;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
   return (
     <View style={styles.container}>
       <Drawer
@@ -194,114 +203,189 @@ const Department = () => {
                   source={require("../assets/avatar-girl.png")}
                   style={styles.avatar}
                 />
-                <Text style={styles.lecturerTextWhite}>Lexa</Text>
+                <Text style={styles.lecturerTextWhite}>
+                  {response?.Secretary?.name}
+                </Text>
                 <Text style={styles.lecturerPositionWhite}>
-                  Head of the department
+                  {response?.Secretary?.position}
                 </Text>
               </View>
             </View>
             <Text style={styles.heading}>Department Courses</Text>
             <View
-              style={[styles.rectangleRed, isDropdownOpen && styles.expanded]}
+              style={[
+                styles.rectangleRed,
+                dropdownOpenState.firstYear && styles.expanded,
+              ]}
             >
               <Text style={styles.Rectangletitle}>First Year</Text>
               <TouchableOpacity
                 style={styles.dropdownButton}
-                onPress={toggleDropdown}
+                onPress={() => toggleDropdown("firstYear")}
               >
-                <Text style={[styles.arrow, isDropdownOpen && styles.arrowUp]}>
+                <Text
+                  style={[
+                    styles.arrow,
+                    dropdownOpenState.firstYear && styles.arrowUp,
+                  ]}
+                >
                   ▼
                 </Text>
               </TouchableOpacity>
-              {isDropdownOpen && (
+              {dropdownOpenState.firstYear && (
                 <View style={styles.dropdownContent}>
-                  <View style={styles.smester}>
-                    <Text style={styles.semesterHeading}>First</Text>
-                    <View style={styles.ClassCardContainer}>
-                      <View style={styles.semsterClassCardRed}></View>
-                    </View>
-                  </View>
+                  {response?.corses?.map((course) => {
+                    if (course.year == 1)
+                      return (
+                        <View style={styles.smester}>
+                          <Text style={styles.semesterHeading}>
+                            {course.name}
+                          </Text>
+                          <View style={styles.ClassCardContainer}>
+                            <View style={styles.semsterClassCardRed}>
+                              <Text>{course.code}</Text>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                  })}
                 </View>
               )}
             </View>
-            <View
-              style={[styles.rectangleGreen, isDropdownOpen && styles.expanded]}
-            >
-              <Text style={styles.Rectangletitle}>Second Year</Text>
-              <TouchableOpacity
-                style={styles.dropdownButton}
-                onPress={toggleDropdown}
+
+            <View>
+              <View
+                style={[
+                  styles.rectangleGreen,
+                  dropdownOpenState.secondYear && styles.expanded,
+                ]}
               >
-                <Text style={[styles.arrow, isDropdownOpen && styles.arrowUp]}>
-                  ▼
-                </Text>
-              </TouchableOpacity>
-              {isDropdownOpen && (
-                <View style={styles.dropdownContent}>
-                  <View style={styles.smester}>
-                    <Text style={styles.semesterHeading}>First</Text>
-                    <View style={styles.ClassCardContainer}>
-                      <View style={styles.semsterClassCardRed}></View>
-                    </View>
+                <Text style={styles.Rectangletitle}>Second Year</Text>
+                <TouchableOpacity
+                  style={styles.dropdownButton}
+                  onPress={() => toggleDropdown("secondYear")}
+                >
+                  <Text
+                    style={[
+                      styles.arrow,
+                      dropdownOpenState.secondYear && styles.arrowUp,
+                    ]}
+                  >
+                    ▼
+                  </Text>
+                </TouchableOpacity>
+                {dropdownOpenState.secondYear && (
+                  <View style={styles.dropdownContent}>
+                    {response?.corses?.map((course) => {
+                      if (course.year == 2)
+                        return (
+                          <View style={styles.smester}>
+                            <Text style={styles.semesterHeading}>
+                              {course.name}
+                            </Text>
+                            <View style={styles.ClassCardContainer}>
+                              <View style={styles.semsterClassCardRed}>
+                                <Text>{course.code}</Text>
+                              </View>
+                            </View>
+                          </View>
+                        );
+                    })}
                   </View>
-                </View>
-              )}
-            </View>
-            <View
-              style={[styles.rectangleBlue, isDropdownOpen && styles.expanded]}
-            >
-              <Text style={styles.Rectangletitle}>Third Year</Text>
-              <TouchableOpacity
-                style={styles.dropdownButton}
-                onPress={toggleDropdown}
+                )}
+              </View>
+
+              <View
+                style={[
+                  styles.rectangleBlue,
+                  dropdownOpenState.thirdYear && styles.expanded,
+                ]}
               >
-                <Text style={[styles.arrow, isDropdownOpen && styles.arrowUp]}>
-                  ▼
-                </Text>
-              </TouchableOpacity>
-              {isDropdownOpen && (
-                <View style={styles.dropdownContent}>
-                  <View style={styles.smester}>
-                    <Text style={styles.semesterHeading}>First</Text>
-                    <View style={styles.ClassCardContainer}>
-                      <View style={styles.semsterClassCardRed}></View>
-                    </View>
+                <Text style={styles.Rectangletitle}>Third Year</Text>
+                <TouchableOpacity
+                  style={styles.dropdownButton}
+                  onPress={() => toggleDropdown("thirdYear")}
+                >
+                  <Text
+                    style={[
+                      styles.arrow,
+                      dropdownOpenState.thirdYear && styles.arrowUp,
+                    ]}
+                  >
+                    ▼
+                  </Text>
+                </TouchableOpacity>
+                {dropdownOpenState.thirdYear && (
+                  <View style={styles.dropdownContent}>
+                    {response?.corses?.map((course) => {
+                      if (course.year == 3)
+                        return (
+                          <View style={styles.smester}>
+                            <Text style={styles.semesterHeading}>
+                              {course.name}
+                            </Text>
+                            <View style={styles.ClassCardContainer}>
+                              <View style={styles.semsterClassCardRed}>
+                                <Text>{course.code}</Text>
+                              </View>
+                            </View>
+                          </View>
+                        );
+                    })}
                   </View>
-                </View>
-              )}
-            </View>
-            <View
-              style={[
-                styles.rectangleYellow,
-                isDropdownOpen && styles.expanded,
-              ]}
-            >
-              <Text style={styles.Rectangletitle}>Forth Year</Text>
-              <TouchableOpacity
-                style={styles.dropdownButton}
-                onPress={toggleDropdown}
+                )}
+              </View>
+
+              <View
+                style={[
+                  styles.rectangleYellow,
+                  dropdownOpenState.fourthYear && styles.expanded,
+                ]}
               >
-                <Text style={[styles.arrow, isDropdownOpen && styles.arrowUp]}>
-                  ▼
-                </Text>
-              </TouchableOpacity>
-              {isDropdownOpen && (
-                <View style={styles.dropdownContent}>
-                  <View style={styles.smester}>
-                    <Text style={styles.semesterHeading}>First</Text>
-                    <View style={styles.ClassCardContainer}>
-                      <View style={styles.semsterClassCardRed}></View>
-                    </View>
+                <Text style={styles.Rectangletitle}>Fourth Year</Text>
+                <TouchableOpacity
+                  style={styles.dropdownButton}
+                  onPress={() => toggleDropdown("fourthYear")}
+                >
+                  <Text
+                    style={[
+                      styles.arrow,
+                      dropdownOpenState.fourthYear && styles.arrowUp,
+                    ]}
+                  >
+                    ▼
+                  </Text>
+                </TouchableOpacity>
+                {dropdownOpenState.fourthYear && (
+                  <View style={styles.dropdownContent}>
+                    {response?.corses?.map((course) => {
+                      if (course.year == 4)
+                        return (
+                          <View style={styles.smester}>
+                            <Text style={styles.semesterHeading}>
+                              {course.name}
+                            </Text>
+                            <View style={styles.ClassCardContainer}>
+                              <View style={styles.semsterClassCardRed}>
+                                <Text>{course.code}</Text>
+                              </View>
+                            </View>
+                          </View>
+                        );
+                    })}
                   </View>
-                </View>
-              )}
+                )}
+              </View>
             </View>
             <Text style={styles.heading}>Erasmus +</Text>
             <View style={styles.backgroundDividerBig}>
               <Text style={styles.whiteParag}>What is Erasmus+ program?</Text>
               <Text style={styles.whiteParag}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Erasmus+ is a European Union program that supports education,
+                training, youth, and sport activities. It provides opportunities
+                for students, teachers, and institutions to study, train, gain
+                work experience, and collaborate with partners from different
+                countries.
               </Text>
               <View style={styles.lecturerCard}>
                 <Image
@@ -309,50 +393,24 @@ const Department = () => {
                   style={styles.avatar}
                 />
                 <Text style={styles.lecturerTextWhite}>Prof. ilhami</Text>
-                <Text style={styles.lecturerPositionWhite}>
-                  Head of the department
-                </Text>
+                <Text style={styles.lecturerPositionWhite}>Erasmus+ Head</Text>
               </View>
             </View>
             <Text style={styles.lecturerText}>
               ________________________________________
             </Text>
-            <Text style={styles.heading}>Internship</Text>
-            <Text style={styles.blueParag}>What is Internship?</Text>
-            <Text style={styles.blueParag}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Text>
+            <Text style={styles.heading}>Workplace</Text>
+
             <View style={styles.lecturerCard}>
               <Image
                 source={require("../assets/avatar-girl.png")}
                 style={styles.avatar}
               />
-              <Text style={styles.lecturerText}>Alex</Text>
-              <Text style={styles.lecturerPosition}>
-                Internship Coordinator
-              </Text>
+              <Text style={styles.lecturerText}>Dr. Isa Avci</Text>
+              <Text style={styles.lecturerPosition}>Workplace Coordinator</Text>
               <Text style={styles.lecturerText}>
                 ________________________________________
               </Text>
-            </View>
-            <Text style={styles.heading}>Workplace Training</Text>
-            <View style={styles.backgroundDividerBig}>
-              <Text style={styles.whiteParag}>What is Workplace Training?</Text>
-              <Text style={styles.whiteParag}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </Text>
-              <View style={styles.lecturerCard}>
-                <Image
-                  source={require("../assets/avatar-girl.png")}
-                  style={styles.avatar}
-                />
-                <Text style={styles.lecturerTextWhite}>Lora</Text>
-                <Text style={styles.lecturerPositionWhite}>
-                  Workplace training Coordinator
-                </Text>
-              </View>
             </View>
           </ScrollView>
         </View>
@@ -617,6 +675,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
     padding: 10,
     zIndex: 1,
+    flexDirection: "row",
   },
   smallCardRed: {
     width: 20,
