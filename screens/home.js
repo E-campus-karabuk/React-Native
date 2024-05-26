@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  StatusBar,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
-
 import * as SecureStore from "expo-secure-store";
 
 const Home = () => {
@@ -39,7 +34,6 @@ const Home = () => {
   };
 
   getToken();
-
   return (
     <View style={styles.container}>
       <Drawer
