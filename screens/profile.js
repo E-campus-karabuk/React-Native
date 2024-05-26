@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Image,
@@ -27,15 +27,12 @@ const getToken = async () => {
 const STDProfile = () => {
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
-  const [timetable, setTimetable] = useState(null);
-  const [selectedDay, setSelectedDay] = useState("Mon"); // Initial selected day is Monday
 
   useLayoutEffect(() => {
     const fetchTokenAndProfile = async () => {
       try {
         const token = await getToken();
 
-        
         setToken(token); // Store token in state
 
         if (token) {
@@ -57,30 +54,33 @@ const STDProfile = () => {
     };
 
     fetchTokenAndProfile();
-  }, []);
+  }, [token]);
 
-  useEffect(() => {
-    const fetchTimetable = async () => {
+  const [selectedDay, setSelectedDay] = useState("Mon");
+  const [courseData, setCourseData] = useState(null);
+
+  useLayoutEffect(() => {
+    const fetchCourses = async () => {
       try {
-        const response = await axios.get( 
-          `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setTimetable(response.data);
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?day=${selectedDay}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setCourseData(data);
+          console.log({ courses: data });
+        }
       } catch (error) {
-        console.log({ error: error.message });
+        console.log({ erorr: error.message });
       }
     };
-
-    if (token) {
-      fetchTimetable();
-    }
-  }, [selectedDay, token]);
+    fetchCourses();
+  }, [selectedDay]);
 
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -88,7 +88,6 @@ const STDProfile = () => {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
-
   const handleLogOut = () => {
     navigation.navigate("E-campus");
   };
@@ -101,16 +100,27 @@ const STDProfile = () => {
   const handleBottomNavBar = (screenName) => {
     navigation.navigate(screenName);
   };
+  // Initial selected day is Monday
 
   const renderTimetable = () => {
-    if (!timetable[selectedDay]) return null;
+    // Logic to render timetable based on selected day
 
-    return timetable[selectedDay].map((course, index) => (
-      <View key={index} style={styles[course.style]}>
-        <Text style={styles.subsubtext}>{course.time}</Text>
-        <Text style={styles.subsubredtext}>{course.courseName}</Text>
-      </View>
-    ));
+    return (
+      <>
+        {/* Timetable for Monday */}
+
+        {courseData?.map((course) => {
+          return (
+            <View style={styles.redrec} key={course._id}>
+              <Text style={styles.subsubtext}>{course.time}</Text>
+              <Text style={styles.subsubredtext}>
+                {course.courseCode} {course.courseName}
+              </Text>
+            </View>
+          );
+        })}
+      </>
+    );
   };
 
   return (
@@ -159,25 +169,34 @@ const STDProfile = () => {
               </View>
             </View>
 
-    <Text style={styles.heading}>My Timetable</Text>
-      <View style={styles.card}>
-        <View style={styles.weekdaysContainer}>
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <TouchableOpacity
-              key={day}
-              style={[styles.weekdayRec, selectedDay === day && { backgroundColor: '#C8272E' }]}
-              onPress={() => setSelectedDay(day)}
-            >
-              <Text style={[styles.weekdayText, selectedDay === day && { color: '#FFFFFF' }]}>
-                {day}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <ScrollView>
-          <View style={styles.recscontainer}>{renderTimetable()}</View>
-        </ScrollView>
-      </View>
+            <Text style={styles.heading}>My Timetable</Text>
+            <View style={styles.card}>
+              <View style={styles.weekdaysContainer}>
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                  <TouchableOpacity
+                    key={day}
+                    style={[
+                      styles.weekdayRec,
+                      selectedDay === day && { backgroundColor: "#C8272E" },
+                    ]}
+                    onPress={() => setSelectedDay(day)}
+                  >
+                    <Text
+                      style={[
+                        styles.weekdayText,
+                        selectedDay === day && { color: "#FFFFFF" },
+                      ]}
+                    >
+                      {day}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {/* Render timetable based on the selected day */}
+              <ScrollView>
+                <View style={styles.recscontainer}>{renderTimetable()}</View>
+              </ScrollView>
+            </View>
           </ScrollView>
         </View>
       )}

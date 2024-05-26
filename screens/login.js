@@ -47,23 +47,6 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const handleLogin = () => {
-    if (
-      username === "20102135@ogrenci.karabuk.edu.tr" &&
-      password === "123456"
-    ) {
-      navigation.navigate("Home"); // Navigate to student screen
-    } else if (username === "lec" && password === "p") {
-      navigation.navigate("HomeLecturer"); // Navigate to lecturer screen
-    } else {
-      console.log("Invalid credentials");
-    }
-
-    // Clear the input fields after logging in
-    setUsername("");
-    setPassword("");
-  };
-
   return (
     <ImageBackground
       source={require("../assets/login_background.jpg")}
