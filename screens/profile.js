@@ -135,10 +135,18 @@ const STDProfile = () => {
         <View style={styles.mainContent}>
           <ScrollView>
             <View style={styles.HeaderRed}>
-              <Image
-                source={require("../assets/avatar-girl.png")}
-                style={styles.avatar}
-              />
+              {response?.user?.sex === "male" && (
+                <Image
+                  source={require(`../assets/profile-user.png`)}
+                  style={styles.avatar}
+                />
+              )}
+              {response?.user?.sex === "female" && (
+                <Image
+                  source={require(`../assets/avatar-girl.png`)}
+                  style={styles.avatar}
+                />
+              )}
             </View>
             <Text style={styles.username}>
               {response?.user?.firstName} {response?.user?.lastName}
