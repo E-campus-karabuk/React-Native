@@ -28,6 +28,8 @@ const LecturerProfile = () => {
 
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
+  const [selectedDay, setSelectedDay] = useState("Mon");
+  const [courseData, setCourseData] = useState(null);
 
   useLayoutEffect(() => {
     const fetchTokenAndProfile = async () => {
@@ -57,8 +59,28 @@ const LecturerProfile = () => {
     fetchTokenAndProfile();
   }, [token]);
 
-  const [selectedDay, setSelectedDay] = useState("Mon");
-  const [courseData, setCourseData] = useState(null);
+  useLayoutEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?day=${selectedDay}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setCourseData(data);
+          console.log({ courses: data });
+        }
+      } catch (error) {
+        console.log({ erorr: error.message });
+      }
+    };
+    fetchCourses();
+  }, [selectedDay]);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -77,73 +99,23 @@ const LecturerProfile = () => {
 
   const renderTimetable = () => {
     // Logic to render timetable based on selected day
-    switch (selectedDay) {
-      case "Mon":
-        return (
-          <>
-            {/* Timetable for Monday */}
 
-            <View style={styles.redrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.greenrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.bluerec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.yellowrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.redrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.greenrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.bluerec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.yellowrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-          </>
-        );
-      case "Tue":
-        return (
-          <>
-            {/* Timetable for Tuesday */}
+    return (
+      <>
+        {/* Timetable for Monday */}
 
-            <View style={styles.redrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
+        {courseData?.map((course) => {
+          return (
+            <View style={styles.redrec} key={course._id}>
+              <Text style={styles.subsubtext}>{course.time}</Text>
+              <Text style={styles.subsubredtext}>
+                {course.courseCode} {course.courseName}
+              </Text>
             </View>
-            <View style={styles.greenrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.bluerec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-            <View style={styles.yellowrec}>
-              <Text style={styles.subsubtext}>10:00</Text>
-              <Text style={styles.subsubredtext}>MAT209 Mathematics</Text>
-            </View>
-          </>
-        );
-
-      default:
-        return null;
-    }
+          );
+        })}
+      </>
+    );
   };
   return (
     <View style={styles.container}>
@@ -176,7 +148,7 @@ const LecturerProfile = () => {
               <FontAwesome5 name="id-card-alt" size={20} color="white" />
               <Text style={styles.majorRecText}>Internship Administrator </Text>
             </View>
-            <Text style={styles.heading}>Timetable & Office Hours</Text>
+            <Text style={styles.heading}>Timetable </Text>
             <View style={styles.card}>
               <View style={styles.weekdaysContainer}>
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
