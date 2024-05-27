@@ -12,7 +12,7 @@ import Department from "./screens/department";
 import Notifications from "./screens/notifications";
 import Messages from "./screens/messages";
 import CourseDetails from "./screens/CourseDetails";
-import LecturerProfile from "./screens/LecturerProfile";
+import LecturerProfile from "./screens/profileLecturer";
 import HomeLecturer from "./screens/Lecturer/homeLecturer";
 import ProfileLecturer from "./screens/Lecturer/profileLecturer";
 import RequestsLecturer from "./screens/Lecturer/requestsLecturer";

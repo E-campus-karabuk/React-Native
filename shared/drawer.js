@@ -36,7 +36,7 @@ const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
     if (screenIdentifier === "Academician") {
       isLec = "true";
     }
-    const screenName = isLec ? `Lecturer${screenIdentifier}` : screenIdentifier;
+    const screenName = isLec ? `${screenIdentifier}Lecturer` : screenIdentifier;
     navigation.navigate(screenName);
     setIsDrawerOpen(false); // Close the drawer after navigating
   };
