@@ -14,7 +14,7 @@ const getRole = async () => {
 };
 
 const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState("");
 
   const handlerRole = async () => {
     const role = await getRole();
@@ -33,14 +33,14 @@ const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
 
   const handleDrawerItemPress = (screenIdentifier) => {
     let isLec;
-    if (screenIdentifier === "Academician") {
+    if (screenIdentifier === "AcademicianProfile") {
       isLec = "true";
     }
     const screenName = isLec ? `${screenIdentifier}Lecturer` : screenIdentifier;
     navigation.navigate(screenName);
     setIsDrawerOpen(false); // Close the drawer after navigating
   };
-  console.log(role);
+  console.log({ role });
   return (
     <View style={styless.container}>
       <View style={styless.navBar}>

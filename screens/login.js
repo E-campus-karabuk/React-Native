@@ -40,6 +40,7 @@ const Login = ({ navigation }) => {
 
       await SecureStore.setItemAsync("token", JSON.stringify(data?.token));
       await SecureStore.setItemAsync("role", JSON.stringify(data?.role));
+      console.log(data?.role);
       navigation.navigate("Home");
     } catch (error) {
       console.log(error);

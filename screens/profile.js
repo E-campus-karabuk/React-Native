@@ -73,7 +73,7 @@ const STDProfile = () => {
             }
           );
           setCourseData(data);
-          console.log({ courses: data });
+          // console.log({ courses: data });
         }
       } catch (error) {
         console.log({ erorr: error.message });
