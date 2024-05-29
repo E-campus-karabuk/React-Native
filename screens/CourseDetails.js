@@ -75,8 +75,8 @@ const CourseDetails = ({route}) => {
 <ScrollView>
         <Text style={styles.heading}>{response?.courseCode} {response?.courseName}</Text>
         
-        <TouchableOpacity onPress={goToLecturerProfile}>
-          <View style={styles.instructorRec}>
+        <TouchableOpacity >
+          <View style={styles.instructorRec}  >
                 <Image
                   source={require('../assets/avatar-man-square.png')}
                   style={styles.avatar}  
@@ -84,7 +84,7 @@ const CourseDetails = ({route}) => {
                 
                 <View style={styles.textContainer}>
                   <Text style={styles.instructorRecText}>Dr. {response?.lecturer[0].firstName} {response?.lecturer[0].lastName}</Text>
-                  <Text style={styles.viewProfileText}>View Profile</Text>
+                  
                 </View>
           </View>
           </TouchableOpacity>
