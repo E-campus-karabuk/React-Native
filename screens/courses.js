@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { View, Text, StatusBar, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,12 +8,83 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import  Drawer from '../shared/drawer';
 import  BottomNavBar from '../shared/bottomNavbar';
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 
 const Courses = () => {
+
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
+  const [currentCourses, setCurrentCourses] = useState(null)
+  const [pastCourses, setPastCourses] = useState(null)
+
+
+  useLayoutEffect(() => {
+    const fetchTokenAndCourses = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?filter=current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+           // console.log({data});
+          setCurrentCourses(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndCourses();
+  }, [token]);
+
+  // PasCourses
+  useLayoutEffect(() => {
+    const fetchTokenAndPastCourses = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?filter=past`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setPastCourses(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndPastCourses();
+  }, [token]);
+
+
     const navigation = useNavigation();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
 
 
   const CourseDetailsScreen = ({ route }) => {
@@ -53,51 +124,22 @@ const Courses = () => {
     >
         <View style={styles.cardContainer}>
 
-        <TouchableOpacity
-          style={styles.courseCardRed}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>MAT202</Text>
-          <Text style={styles.cardBlueText}>Mathematics</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
-      
+        {currentCourses?.map((course) => {
+          return(<TouchableOpacity key={course._id}
+            style={styles.courseCardRed}
+            onPress={() =>
+              navigation.navigate('CourseDetails', {
+                courseId: 'MAT202',
+                courseName: 'Mathematics',
+                instructor: 'Dr. Alex',
+              })
+            }
+          >
+            <Text style={styles.cardGrayText}>{course.courseCode}</Text>
+            <Text style={styles.cardBlueText}>{course.courseName}</Text>
             
-            
-        <TouchableOpacity
-          style={styles.courseCardGreen}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>MAT202</Text>
-          <Text style={styles.cardBlueText}>Mathematics</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.courseCardBlue}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>PRG202</Text>
-          <Text style={styles.cardBlueText}>Programming</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>)
+        })}
       
         </View>
         </ScrollView>
@@ -111,51 +153,23 @@ const Courses = () => {
       contentContainerStyle={{ paddingHorizontal: 20 }}
     >
         <View style={styles.bottomcardContainer}>
-        <TouchableOpacity
-          style={styles.courseCardRed}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>MAT202</Text>
-          <Text style={styles.cardBlueText}>Mathematics</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
+        {pastCourses?.map((course) => {
+          return(<TouchableOpacity key={course._id}
+            style={styles.courseCardRed}
+            onPress={() =>
+              navigation.navigate('CourseDetails', {
+                courseId: 'MAT202',
+                courseName: 'Mathematics',
+                instructor: 'Dr. Alex',
+              })
+            }
+          >
+            <Text style={styles.cardGrayText}>{course.courseCode}</Text>
+            <Text style={styles.cardBlueText}>{course.courseName}</Text>
+            
+          </TouchableOpacity>)
+        })}
       
-            
-            
-        <TouchableOpacity
-          style={styles.courseCardGreen}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>MAT202</Text>
-          <Text style={styles.cardBlueText}>Mathematics</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.courseCardBlue}
-          onPress={() =>
-            navigation.navigate('CourseDetails', {
-              courseId: 'MAT202',
-              courseName: 'Mathematics',
-              instructor: 'Dr. Alex',
-            })
-          }
-        >
-          <Text style={styles.cardGrayText}>PRG202</Text>
-          <Text style={styles.cardBlueText}>Programming</Text>
-          <Text style={styles.lessonred}>Dr. Alex</Text>
-        </TouchableOpacity>
       
         </View>
         </ScrollView>
