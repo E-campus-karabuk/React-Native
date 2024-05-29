@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,Image } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react';
+import {Linking, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -9,15 +9,58 @@ import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import  Drawer from '../shared/drawer';
 import  BottomNavBar from '../shared/bottomNavbar';
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 
-const CourseDetails = () => {
+
+const CourseDetails = ({route}) => {
     const navigation = useNavigation();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+    const [token, setToken] = useState(null);
+    const [response, setResponse] = useState(null);
+    const { courseId, courseName, instructor } = route.params;
   const goToLecturerProfile = () => {
     navigation.navigate('LecturerProfile');
   };
+
+  const handlePress = (url) => {
+    Linking.openURL(url).catch(err => console.error("Failed to open URL: ", err));
+  };
+
+  useLayoutEffect(() => {
+    const fetchTokenAndCourse = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/${courseId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+           // console.log({data});
+           setResponse(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndCourse();
+  }, [token]);
+
   
   return (
     <View style={styles.container}>
@@ -30,10 +73,8 @@ const CourseDetails = () => {
 <View style={styles.mainContent}>
   
 <ScrollView>
-        <Text style={styles.heading}>PRG209 Programming</Text>
-        <Text style={styles.describtion}>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Text>
+        <Text style={styles.heading}>{response?.courseCode} {response?.courseName}</Text>
+        
         <TouchableOpacity onPress={goToLecturerProfile}>
           <View style={styles.instructorRec}>
                 <Image
@@ -42,7 +83,7 @@ const CourseDetails = () => {
                 /> 
                 
                 <View style={styles.textContainer}>
-                  <Text style={styles.instructorRecText}>Dr. Sam Felix</Text>
+                  <Text style={styles.instructorRecText}>Dr. {response?.lecturer[0].firstName} {response?.lecturer[0].lastName}</Text>
                   <Text style={styles.viewProfileText}>View Profile</Text>
                 </View>
           </View>
@@ -50,69 +91,29 @@ const CourseDetails = () => {
           <Text style={styles.heading}>Notes & Related Links</Text>
           
            <View style={styles.tableHeader}>
-           <Text style={styles.category}>Category Name</Text>
-           <View style={styles.searchBar}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Search"
-                placeholderTextColor="gray"
-              />
-              <EvilIcons name="search" size={18} color="gray" style={styles.icon} />
-         </View>
-           <TouchableOpacity style={styles.whiteFilterButton}>
-              <Text style={styles.whiteFilterButtonText}>Sort By</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.whiteFilterButton}>
-              <Text style={styles.whiteFilterButtonText}>Filter</Text>
-              <MaterialCommunityIcons name="filter-menu" size={10} color="#C8272E" />
-           </TouchableOpacity>
+          
+          
           </View>
           <View style={styles.card}>
           <ScrollView>
-              <TouchableOpacity style={styles.smallcard}>
-                  <Image
+              {response?.notes?.map((note) => {
+                return (
+                  <TouchableOpacity style={styles.smallcard} onPress={() => handlePress(`${process.env.EXPO_PUBLIC_API_URL}/${note.file}`)}>
+                    <Image
                       source={require('../assets/pdf.png')}
                       style={styles.fileTypeImg}  
                     />
                     <View style={styles.textContainerTable}>
-                        <Text style={styles.tableCardHeading}>Week 1 Exercises.pdf</Text>
-                        <Text style={styles.tableCardDate}>1/1/2024</Text>
+                      <Text style={styles.tableCardHeading}>{note.title}</Text>
+                      <Text style={styles.tableCardDate}>{new Date(note.createdAt).toLocaleDateString()}</Text>
                     </View>
-                    <View style={styles.cardIcon}><Entypo name="dots-three-horizontal" size={10} color="#1F3D75"/></View>
-              </TouchableOpacity>
-              <View style={styles.smallcard}>
-                  <Image
-                      source={require('../assets/excel.png')}
-                      style={styles.fileTypeImg}  
-                    />
-                    <TouchableOpacity style={styles.textContainerTable}>
-                        <Text style={styles.tableCardHeading}>Week 2 Exercises.pdf</Text>
-                        <Text style={styles.tableCardDate}>1/1/2024</Text>
-                    </TouchableOpacity>
-                    <View style={styles.cardIcon}><Entypo name="dots-three-horizontal" size={10} color="#1F3D75"/></View>
-              </View>
-              <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                      source={require('../assets/pptx.png')}
-                      style={styles.fileTypeImg}  
-                    />
-                    <View style={styles.textContainerTable}>
-                        <Text style={styles.tableCardHeading}>Week 3 Exercises.pdf</Text>
-                        <Text style={styles.tableCardDate}>1/1/2024</Text>
+                    <View style={styles.cardIcon}>
+                      <Entypo name="dots-three-horizontal" size={10} color="#1F3D75"/>
                     </View>
-                    <View style={styles.cardIcon}><Entypo name="dots-three-horizontal" size={10} color="#1F3D75"/></View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                      source={require('../assets/docx.png')}
-                      style={styles.fileTypeImg}  
-                    />
-                    <View style={styles.textContainerTable}>
-                        <Text style={styles.tableCardHeading}>Week 4 Exercises.pdf</Text>
-                        <Text style={styles.tableCardDate}>1/1/2024</Text>
-                    </View>
-                    <View style={styles.cardIcon}><Entypo name="dots-three-horizontal" size={10} color="#1F3D75"/></View>
-              </TouchableOpacity>
+                  </TouchableOpacity>
+                );
+              })}
+              
           </ScrollView>    
           </View>
           </ScrollView>    

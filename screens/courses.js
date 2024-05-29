@@ -129,7 +129,7 @@ const Courses = () => {
             style={styles.courseCardRed}
             onPress={() =>
               navigation.navigate('CourseDetails', {
-                courseId: 'MAT202',
+                courseId: course._id,
                 courseName: 'Mathematics',
                 instructor: 'Dr. Alex',
               })
