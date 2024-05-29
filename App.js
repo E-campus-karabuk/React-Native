@@ -23,6 +23,7 @@ import DepartmentLecturer from "./screens/Lecturer/departmentLecturer";
 import MessagesLecturer from "./screens/Lecturer/messagesLecturer";
 import NotificationsLecturer from "./screens/Lecturer/notificationsLecturer";
 import SPgroupsLecturer from "./screens/Lecturer/SPgroupsLecturer";
+import Chat from "./screens/Chat";
 import Drawer from "./shared/drawer";
 
 import MyLayout from "./layout/myLayout";
@@ -53,6 +54,7 @@ const App = () => {
         <Stack.Screen name="ProfileLecturer" component={ProfileLecturer} />
         <Stack.Screen name="RequestsLecturer" component={RequestsLecturer} />
         <Stack.Screen name="CoursesLecturer" component={CoursesLecturer} />
+        <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen
           name="CourseDetailsLecturer"
           component={CourseDetailsLecturer}

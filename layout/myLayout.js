@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import HomeLecturer from '../screens/Lecturer/homeLecturer'; 
 
-const MyLayout = () => {
+const MyLayout = ({children}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
@@ -23,12 +23,12 @@ const MyLayout = () => {
       <View style={styles.mainContent}>
 
       {/* <HomeLecturer/> */}
-     
+        {children}
       </View>
        )} 
 
                
-        <BottomNavBar 
+  <BottomNavBar 
         isLecturer={false}/>
          
 
