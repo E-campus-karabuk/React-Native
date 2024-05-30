@@ -10,7 +10,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import * as Keychain from "react-native-keychain";
+
 import * as SecureStore from "expo-secure-store";
 
 const Login = ({ navigation }) => {
@@ -43,7 +43,7 @@ const Login = ({ navigation }) => {
       console.log(data?.role);
       navigation.navigate("Home");
     } catch (error) {
-      console.log(error);
+      console.log({ error: error.message });
       console.log(process.env.EXPO_PUBLIC_API_URL);
     }
   };

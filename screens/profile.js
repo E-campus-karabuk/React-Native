@@ -80,7 +80,7 @@ const STDProfile = () => {
       }
     };
     fetchCourses();
-  }, [selectedDay]);
+  }, [token, selectedDay]);
 
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

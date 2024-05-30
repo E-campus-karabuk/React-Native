@@ -30,7 +30,7 @@ const Home = () => {
 
   const getToken = async () => {
     const token = await SecureStore.getItemAsync("token");
-    console.log(JSON.parse(token));
+    //console.log(JSON.parse(token));
   };
 
   getToken();

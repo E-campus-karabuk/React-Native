@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
@@ -26,8 +26,21 @@ const topics = [
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState(null);
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState(null);
   const [token, setToken] = useState(null);
+  const [showTopics, setShowTopics] = useState(false);
+
+  useEffect(() => {
+    const delayTimer = setTimeout(() => {
+      setShowTopics(true);
+    }, 6000); // 4-second delay
+
+    return () => clearTimeout(delayTimer);
+  }, []); // Run once on component mount
+
+  const handleTopicChange = (topic) => {
+    setTopic(topic);
+  };
 
   useLayoutEffect(() => {
     const fetchAndSendMessage = async () => {
@@ -71,6 +84,7 @@ const Chat = () => {
     // You can add more functionality here, like sending the message to a server
     // or updating the state to clear the input field
   };
+  console.log({ topic });
 
   return (
     <View style={styles.container}>
@@ -87,6 +101,18 @@ const Chat = () => {
           </View>
         </View>
         {/* Add more message containers as needed */}
+        {showTopics && (
+          <View style={styles.topicsContainer}>
+            {topics.map((topic) => (
+              <Text
+                style={styles.topicButton}
+                onPress={() => handleTopicChange(Object.keys(topic)[0])}
+              >
+                {Object.keys(topic)[0]}
+              </Text>
+            ))}
+          </View>
+        )}
       </ScrollView>
       {/* Input field */}
       <View style={styles.inputContainer}>
@@ -95,6 +121,7 @@ const Chat = () => {
           placeholder="Type something"
           value={message}
           onChangeText={handleMessageChange}
+          editable={topic} // Disable input if topic is empty
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
@@ -108,6 +135,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+  },
+  topicsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 8, // mb-2
+  },
+
+  topicButton: {
+    backgroundColor: "#3B82F6", // bg-blue-500
+    color: "#FFFFFF", // text-white
+    paddingVertical: 8, // py-2
+    paddingHorizontal: 16, // px-4
+    marginLeft: 8, // ml-2
+    marginTop: 8, // mt-2
+    display: "inline-block",
+    borderRadius: 20,
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -167,6 +210,30 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  bgBlue500: {
+    backgroundColor: "#3B82F6",
+  },
+  textWhite: {
+    color: "white",
+  },
+  roundedLg: {
+    borderRadius: 12,
+  },
+  py2: {
+    paddingVertical: 8,
+  },
+  px4: {
+    paddingHorizontal: 16,
+  },
+  ml2: {
+    marginLeft: 8,
+  },
+  mt2: {
+    marginTop: 8,
+  },
+  inlineBlock: {
+    display: "inline-block",
   },
 });
 
