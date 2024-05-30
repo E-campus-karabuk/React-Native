@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 const Home = () => {
   const navigation = useNavigation();
@@ -28,12 +34,37 @@ const Home = () => {
     { time: "06:00", subject: "ART108 Art", style: "bluerec" },
   ];
 
-  const getToken = async () => {
-    const token = await SecureStore.getItemAsync("token");
-    //console.log(JSON.parse(token));
-  };
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
 
-  getToken();
+  useLayoutEffect(() => {
+    const fetchTokenAndProfile = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/student/current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setResponse(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndProfile();
+  }, [token]);
+
   return (
     <View style={styles.container}>
       <Drawer
@@ -46,16 +77,24 @@ const Home = () => {
         <View style={styles.mainContent}>
           <ScrollView>
             <Text style={styles.maintext}>
-              Welcome <Text style={styles.subtext}>Nisreen</Text> !
+              Welcome{" "}
+              <Text style={styles.subtext}>
+                {response?.user?.firstName} {response?.user?.lastName}
+              </Text>{" "}
+              !
             </Text>
             <Text style={styles.heading}>Today’s Schedule</Text>
 
             <View style={styles.card}>
               <View style={styles.smallcardcontainer}>
                 <View style={styles.smallcard}>
-                  <Text style={styles.month}>March</Text>
-                  <Text style={styles.day}>03</Text>
-                  <Text style={styles.weekday}>Monday</Text>
+                  <Text style={styles.month}>
+                    {new Date().toLocaleString("en-TR", { month: "long" })}
+                  </Text>
+                  <Text style={styles.day}>{new Date().getDate()}</Text>
+                  <Text style={styles.weekday}>
+                    {new Date().toLocaleString("en-TR", { weekday: "long" })}
+                  </Text>
                 </View>
                 <View style={styles.smallcardlessons}>
                   <ScrollView>
