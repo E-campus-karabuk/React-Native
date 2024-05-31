@@ -126,7 +126,10 @@ const Home = () => {
                     <Text style={styles.lessons}>Lessons</Text>
                     {lessons?.map((lesson, index) => {
                       return (
-                        <View style={styles.whiterec} key={index}>
+                        <View
+                          style={styles[stylesArr[index % stylesArr.length]]}
+                          key={index}
+                        >
                           <Text style={styles.lessongray}>
                             {lesson.courseName.length > 15
                               ? lesson.courseName.substring(0, 15) + "..."
@@ -143,7 +146,10 @@ const Home = () => {
                 <Text style={styles.subhead}>Timeline</Text>
                 <ScrollView>
                   {lessons?.map((item, index) => (
-                    <View key={index} style={styles.bluerec}>
+                    <View
+                      key={index}
+                      style={styles[stylesArr[index % stylesArr.length]]}
+                    >
                       <Text style={styles.subsubtext}>{item.time}</Text>
                       <Text style={styles.subsubredtext}>
                         {item.courseCode}
