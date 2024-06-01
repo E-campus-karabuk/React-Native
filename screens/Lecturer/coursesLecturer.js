@@ -126,6 +126,7 @@ const CoursesLecturer = () => {
               <View style={styles.cardContainer}>
                 {currentCourses?.map((course) => {
                   return (
+                    //  TODO: FIX THE COLORS
                     <TouchableOpacity
                       style={styles.courseCardRed}
                       onPress={() =>
@@ -163,6 +164,7 @@ const CoursesLecturer = () => {
               <View style={styles.bottomcardContainer}>
                 {pastCourses?.map((course) => {
                   return (
+                    //  TODO: FIX THE COLORS
                     <TouchableOpacity
                       style={styles.courseCardRed}
                       onPress={() =>

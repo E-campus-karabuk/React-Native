@@ -36,6 +36,7 @@ const Department = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoSliding, setIsAutoSliding] = useState(true);
   const [response, setResponse] = useState(null);
+  const flatListRef = useRef(null);
 
   const [dropdownOpenState, setDropdownOpenState] = useState({
     firstYear: false,
@@ -49,7 +50,6 @@ const Department = () => {
       [year]: !prevState[year],
     }));
   };
-  const flatListRef = useRef(null);
 
   useLayoutEffect(() => {
     const fetchTokenAndDepartment = async () => {
@@ -79,12 +79,13 @@ const Department = () => {
     fetchTokenAndDepartment();
   }, [token]);
 
-  console.log({ response });
+  // console.log({ response });
 
   const images = [
     require("../assets/login_background.jpg"),
     require("../assets/slider_img1.jpg"),
   ];
+
   useEffect(() => {
     let intervalId;
     if (isAutoSliding) {
