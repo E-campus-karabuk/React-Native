@@ -38,16 +38,18 @@ const Chat = () => {
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       setShowTopics(true);
-    }, 6000); // 4-second delay
+    }, 1000); // 4-second delay
 
     return () => clearTimeout(delayTimer);
   }, []); // Run once on component mount
 
   const handleTopicChange = (topic) => {
     setTopic(topic);
+
     setTimeout(() => {
       setDisableTopic(true);
-    }, 2000);
+      addBotMessage(`You selected ${topic}`);
+    }, 1000);
   };
 
   useLayoutEffect(() => {
@@ -153,6 +155,16 @@ const Chat = () => {
             </View>
           </View>
         ))}
+        {isLoading && (
+          <View style={[styles.messageBubble, styles.botMessage]}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>AI</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text>Typing...</Text>
+            </View>
+          </View>
+        )}
       </ScrollView>
       {/* Input field */}
       <View style={styles.inputContainer}>
@@ -161,7 +173,7 @@ const Chat = () => {
           placeholder="Type something"
           value={message}
           onChangeText={handleMessageChange}
-          editable={topic !== null || !isLoading} // Disable input if topic is empty
+          editable={topic !== null && !isFinished} // Disable input if topic is empty
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
@@ -183,7 +195,7 @@ const styles = StyleSheet.create({
   },
 
   topicButton: {
-    backgroundColor: "#3B82F6", // bg-blue-500
+    backgroundColor: "#223F76", // bg-blue-500
     color: "#FFFFFF", // text-white
     paddingVertical: 8, // py-2
     paddingHorizontal: 16, // px-4
@@ -233,7 +245,7 @@ const styles = StyleSheet.create({
     width: 40, // h-10, w-10
     height: 40,
     borderRadius: 20, // rounded-full
-    backgroundColor: "#6B46C1", // bg-indigo-500
+    backgroundColor: "#223F76", // bg-indigo-500
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12, // ml-3
@@ -272,7 +284,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   sendButton: {
-    backgroundColor: "#6B46C1",
+    backgroundColor: "#223F76",
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 12,
