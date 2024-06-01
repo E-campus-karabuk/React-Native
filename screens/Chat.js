@@ -111,10 +111,10 @@ const Chat = () => {
         <View style={styles.messageContainer}>
           <View style={styles.messageBubble}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>A</Text>
+              <Text style={styles.avatarText}>AI</Text>
             </View>
             <View style={styles.messageContent}>
-              <Text>Hey How are you today?</Text>
+              <Text>Hey How can i help you today?</Text>
             </View>
           </View>
         </View>
@@ -139,7 +139,18 @@ const Chat = () => {
               chatMessage.isUser ? styles.userMessage : styles.botMessage,
             ]}
           >
-            <Text style={styles.messageText}>{chatMessage.message}</Text>
+            <View
+              style={chatMessage.isUser ? styles.avatarUser : styles.avatar}
+            >
+              <Text style={styles.avatarText}>
+                {chatMessage.isUser ? "Me" : "AI"}
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={chatMessage.isUser ? styles.messageText : ""}>
+                {chatMessage.message}
+              </Text>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -198,21 +209,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12, // p-3
     borderRadius: 12, // rounded-lg
-    backgroundColor: "white", // bg-white
+    backgroundColor: "white",
+    // bg-white
+    // Wrap the text within the container
   },
   userMessage: {
     backgroundColor: "#3B82F6", // bg-blue-500
-    marginLeft: "auto", // ml-auto
-    marginRight: 0, // mr-0
+    // ml-auto
+    marginRight: 0,
+    marginLeft: 40, // mr-0
     color: "#FFFFFF", // text-white
     marginTop: 2,
     marginBottom: 2,
   },
   botMessage: {
-    backgroundColor: "#F3F4F6", // bg-gray-100
-    marginLeft: 0, // ml-0
-    marginRight: "auto",
-    color: "#000000", // text-black
+    marginLeft: "2", // ml-auto
+    marginRight: 30, // mr-0
+
     marginTop: 2,
     marginBottom: 2,
   },
@@ -221,6 +234,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20, // rounded-full
     backgroundColor: "#6B46C1", // bg-indigo-500
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12, // ml-3
+  },
+  avatarUser: {
+    width: 40, // h-10, w-10
+    height: 40,
+    borderRadius: 20, // rounded-full
+    backgroundColor: "#2B46C1", // bg-indigo-500
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12, // ml-3
