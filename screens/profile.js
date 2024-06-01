@@ -37,7 +37,7 @@ const STDProfile = () => {
 
         if (token) {
           const { data } = await axios.get(
-            `${process.env.EXPO_PUBLIC_API_URL}/api/student/current`,
+            `${process.env.EXPO_PUBLIC_API_URL}/api/auth/current`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -107,8 +107,7 @@ const STDProfile = () => {
 
     return (
       <>
-        {/* Timetable for Monday */}
-
+        {/* TODO: FIX THE COLORS */}
         {courseData?.map((course) => {
           return (
             <View style={styles.redrec} key={course._id}>
