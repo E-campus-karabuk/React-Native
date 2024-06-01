@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 const Home = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const stylesArr = ["redrec", "greenrec", "bluerec"];
   const scheduleData = [
     { time: "10:00", subject: "MAT209 Mathematics", style: "redrec" },
     { time: "11:00", subject: "PHY101 Physics", style: "greenrec" },
@@ -28,12 +34,62 @@ const Home = () => {
     { time: "06:00", subject: "ART108 Art", style: "bluerec" },
   ];
 
-  const getToken = async () => {
-    const token = await SecureStore.getItemAsync("token");
-    //console.log(JSON.parse(token));
-  };
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
+  const [lessons, setLessons] = useState(null);
 
-  getToken();
+  useLayoutEffect(() => {
+    const fetchTokenAndProfile = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/student/current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setResponse(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndProfile();
+  }, [token]);
+
+  useLayoutEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?filter=current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setLessons(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchLessons();
+  }, [token]);
+
   return (
     <View style={styles.container}>
       <Drawer
@@ -46,32 +102,42 @@ const Home = () => {
         <View style={styles.mainContent}>
           <ScrollView>
             <Text style={styles.maintext}>
-              Welcome <Text style={styles.subtext}>Nisreen</Text> !
+              Welcome{" "}
+              <Text style={styles.subtext}>
+                {response?.user?.firstName} {response?.user?.lastName}
+              </Text>{" "}
+              !
             </Text>
             <Text style={styles.heading}>Today’s Schedule</Text>
 
             <View style={styles.card}>
               <View style={styles.smallcardcontainer}>
                 <View style={styles.smallcard}>
-                  <Text style={styles.month}>March</Text>
-                  <Text style={styles.day}>03</Text>
-                  <Text style={styles.weekday}>Monday</Text>
+                  <Text style={styles.month}>
+                    {new Date().toLocaleString("en-TR", { month: "long" })}
+                  </Text>
+                  <Text style={styles.day}>{new Date().getDate()}</Text>
+                  <Text style={styles.weekday}>
+                    {new Date().toLocaleString("en-TR", { weekday: "long" })}
+                  </Text>
                 </View>
                 <View style={styles.smallcardlessons}>
                   <ScrollView>
                     <Text style={styles.lessons}>Lessons</Text>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessonred}>Mathematics</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessongray}>Programming</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessonred}>Mathematics</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessongray}>Programming</Text>
-                    </View>
+                    {lessons?.map((lesson, index) => {
+                      return (
+                        <View
+                          style={styles[stylesArr[index % stylesArr.length]]}
+                          key={index}
+                        >
+                          <Text style={styles.lessongray}>
+                            {lesson.courseName.length > 15
+                              ? lesson.courseName.substring(0, 15) + "..."
+                              : lesson.courseName}
+                          </Text>
+                        </View>
+                      );
+                    })}
                   </ScrollView>
                 </View>
               </View>
@@ -79,10 +145,15 @@ const Home = () => {
               <View style={styles.recscontainer}>
                 <Text style={styles.subhead}>Timeline</Text>
                 <ScrollView>
-                  {scheduleData.map((item, index) => (
-                    <View key={index} style={styles[item.style]}>
+                  {lessons?.map((item, index) => (
+                    <View
+                      key={index}
+                      style={styles[stylesArr[index % stylesArr.length]]}
+                    >
                       <Text style={styles.subsubtext}>{item.time}</Text>
-                      <Text style={styles.subsubredtext}>{item.subject}</Text>
+                      <Text style={styles.subsubredtext}>
+                        {item.courseCode}
+                      </Text>
                     </View>
                   ))}
                 </ScrollView>
@@ -95,50 +166,32 @@ const Home = () => {
               contentContainerStyle={{ paddingHorizontal: 20 }}
             >
               <View style={styles.cardContainer}>
-                <TouchableOpacity
-                  style={styles.courseCardRed}
-                  onPress={() =>
-                    navigation.navigate("CourseDetails", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>MAT202</Text>
-                  <Text style={styles.cardBlueText}>Mathematics</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.courseCardGreen}
-                  onPress={() =>
-                    navigation.navigate("CourseDetails", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>MAT202</Text>
-                  <Text style={styles.cardBlueText}>Mathematics</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.courseCardBlue}
-                  onPress={() =>
-                    navigation.navigate("CourseDetails", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>PRG202</Text>
-                  <Text style={styles.cardBlueText}>Programming</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
+                {lessons?.map((lesson, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.courseCardRed}
+                      onPress={() =>
+                        navigation.navigate("CourseDetails", {
+                          courseId: "MAT202",
+                          courseName: "Mathematics",
+                          instructor: "Dr. Alex",
+                        })
+                      }
+                    >
+                      <Text style={styles.cardGrayText}>
+                        {lesson.courseCode}
+                      </Text>
+                      <Text style={styles.cardBlueText}>
+                        {lesson.courseName}
+                      </Text>
+                      <Text style={styles.lessonred}>
+                        {lesson.lecturer[0].firstName}{" "}
+                        {lesson.lecturer[0].lastName}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </ScrollView>
           </ScrollView>

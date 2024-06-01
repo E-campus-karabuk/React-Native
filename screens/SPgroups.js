@@ -104,14 +104,16 @@ const SPgroups = () => {
                 />
                 <Text style={styles.redHeading}> Members</Text>
               </View>
-              {response?.students?.map((student, index) => {
-                return (
-                  <Text style={styles.members} key={index}>
-                    {" "}
-                    {index + 1}.{student.firstName} {student.lastName}
-                  </Text>
-                );
-              })}
+              <View style={styles.membersContainer}>
+                {response?.students?.map((student, index) => {
+                  return (
+                    <Text style={styles.members} key={index}>
+                      {" "}
+                      {index + 1}.{student.firstName} {student.lastName}
+                    </Text>
+                  );
+                })}
+              </View>
             </View>
 
             <TouchableOpacity onPress={goToLecturerProfile}>
@@ -190,6 +192,13 @@ const styles = StyleSheet.create({
     height: "82%",
     left: 0,
     right: 0,
+  },
+  membersContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "2px",
+    justifyContent: "center",
+    marginLeft: 10,
   },
   navBar: {
     flexDirection: "row",
@@ -282,7 +291,7 @@ const styles = StyleSheet.create({
   },
   courseCardRed: {
     width: 340,
-    height: 129,
+    minHeight: 129,
     borderRadius: 4,
     backgroundColor: "#FFE6E6",
     shadowColor: "rgba(0, 0, 0, 0.08)",

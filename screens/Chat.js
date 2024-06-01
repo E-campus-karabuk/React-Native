@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+// Add the missing import statement
 
 const getToken = async () => {
   const token = await SecureStore.getItemAsync("token");
@@ -29,7 +30,10 @@ const Chat = () => {
   const [topic, setTopic] = useState(null);
   const [token, setToken] = useState(null);
   const [showTopics, setShowTopics] = useState(false);
-
+  const [disableTopic, setDisableTopic] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       setShowTopics(true);
@@ -40,13 +44,16 @@ const Chat = () => {
 
   const handleTopicChange = (topic) => {
     setTopic(topic);
+    setTimeout(() => {
+      setDisableTopic(true);
+    }, 2000);
   };
 
   useLayoutEffect(() => {
     const fetchAndSendMessage = async () => {
       try {
         const token = await getToken();
-
+        setIsLoading(true);
         setToken(token); // Store token in state
 
         if (token) {
@@ -55,35 +62,45 @@ const Chat = () => {
             {
               topic: topic,
               prompt: message,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
             }
           );
           // console.log({data});
           setResponse(data);
+          setChatMessages([
+            ...chatMessages,
+            { message: data.message, isUser: false },
+          ]);
+          setIsLoading(false);
         }
       } catch (error) {
         console.log({ error: error.message });
       }
     };
 
-    fetchAndSendMessage();
-  }, [token]);
+    if (isFinished) {
+      fetchAndSendMessage();
+    }
+  }, [isFinished]);
+  console.log({ response });
 
   const handleMessageChange = (text) => {
     setMessage(text);
   };
 
   const sendMessage = () => {
-    // Logic to send the message
-    console.log("Message sent:", message);
-    // You can add more functionality here, like sending the message to a server
-    // or updating the state to clear the input field
+    addUserMessage(message);
+    setIsFinished(true);
+    setMessage("");
   };
+
+  const addUserMessage = (message) => {
+    setChatMessages([...chatMessages, { message, isUser: true }]);
+  };
+
+  const addBotMessage = (message) => {
+    setChatMessages([...chatMessages, { message, isUser: false }]);
+  };
+
   console.log({ topic });
 
   return (
@@ -101,7 +118,7 @@ const Chat = () => {
           </View>
         </View>
         {/* Add more message containers as needed */}
-        {showTopics && (
+        {showTopics && !disableTopic && (
           <View style={styles.topicsContainer}>
             {topics.map((topic) => (
               <Text
@@ -113,6 +130,17 @@ const Chat = () => {
             ))}
           </View>
         )}
+        {chatMessages.map((chatMessage, index) => (
+          <View
+            key={index}
+            style={[
+              styles.messageBubble,
+              chatMessage.isUser ? styles.userMessage : styles.botMessage,
+            ]}
+          >
+            <Text style={styles.messageText}>{chatMessage.message}</Text>
+          </View>
+        ))}
       </ScrollView>
       {/* Input field */}
       <View style={styles.inputContainer}>
@@ -121,7 +149,7 @@ const Chat = () => {
           placeholder="Type something"
           value={message}
           onChangeText={handleMessageChange}
-          editable={topic} // Disable input if topic is empty
+          editable={topic !== null || !isLoading} // Disable input if topic is empty
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
@@ -152,6 +180,9 @@ const styles = StyleSheet.create({
     display: "inline-block",
     borderRadius: 20,
   },
+  messageText: {
+    color: "#FFFFFF",
+  },
   scrollViewContent: {
     flexGrow: 1,
     padding: 4,
@@ -167,6 +198,22 @@ const styles = StyleSheet.create({
     padding: 12, // p-3
     borderRadius: 12, // rounded-lg
     backgroundColor: "white", // bg-white
+  },
+  userMessage: {
+    backgroundColor: "#3B82F6", // bg-blue-500
+    marginLeft: "auto", // ml-auto
+    marginRight: 0, // mr-0
+    color: "#FFFFFF", // text-white
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  botMessage: {
+    backgroundColor: "#F3F4F6", // bg-gray-100
+    marginLeft: 0, // ml-0
+    marginRight: "auto",
+    color: "#000000", // text-black
+    marginTop: 2,
+    marginBottom: 2,
   },
   avatar: {
     width: 40, // h-10, w-10
