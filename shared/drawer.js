@@ -33,7 +33,7 @@ const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
 
   const handleDrawerItemPress = (screenIdentifier) => {
     let isLec;
-    if (screenIdentifier === "AcademicianProfile") {
+    if (role == "Lecturer") {
       isLec = "true";
     }
     const screenName = isLec ? `${screenIdentifier}Lecturer` : screenIdentifier;
@@ -60,9 +60,7 @@ const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
       {/*  Drawer Content Goes Here */}
       {isDrawerOpen && (
         <View style={styless.drawer}>
-          <TouchableOpacity
-            onPress={() => handleDrawerItemPress(`${role}Profile`)}
-          >
+          <TouchableOpacity onPress={() => handleDrawerItemPress(`Profile`)}>
             <Text style={styless.drawerContent}>Profile</Text>
           </TouchableOpacity>
 
