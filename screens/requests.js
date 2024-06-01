@@ -15,6 +15,7 @@ import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { Picker } from "@react-native-picker/picker";
 
 const getToken = async () => {
   const token = await SecureStore.getItemAsync("token");
@@ -30,11 +31,41 @@ const Requests = () => {
   const [currentTotalPage, setTotalCurrentPage] = useState(1);
   const [currentTypeFilter, setCurrentTypeFilter] = useState("");
 
+  const handleCurrentType = (key) => {
+    setCurrentTypeFilter(key);
+    setShowPicker(false); // Hide the picker after selection
+  };
+
   // past
   const [pastRequests, setPastRequests] = useState(null);
   const [pastPage, setPastPage] = useState(1);
   const [pastTotalPage, setTotalPastPage] = useState(1);
   const [pastTypeFilter, setPastTypeFilter] = useState("");
+
+  const handlePastType = (key) => {
+    setPastTypeFilter(key);
+  };
+
+  const [showPicker, setShowPicker] = useState(false);
+
+  const filterItems = [
+    {
+      key: "",
+      label: "All",
+    },
+    {
+      key: "internship",
+      label: "Internship",
+    },
+    {
+      key: "gradeObjection",
+      label: "Grade Objection",
+    },
+    {
+      key: "recommendationLetter",
+      label: "Recommendation Letter",
+    },
+  ];
 
   // current fetch
   useLayoutEffect(() => {
@@ -57,8 +88,6 @@ const Requests = () => {
           //  console.log(data);
           setCurrentRequests(data.studentRequests);
           setTotalCurrentPage(data.totalPages);
-          // console.log(currentRequests);
-          // console.log(currentTotalPage);
         }
       } catch (error) {
         console.log({ error: error.message });
@@ -88,8 +117,6 @@ const Requests = () => {
           );
           setPastRequests(data.studentRequests);
           setTotalPastPage(data.totalPages);
-          // console.log(pastRequests);
-          // console.log(pastTotalPage);
         }
       } catch (error) {
         console.log({ error: error.message });
@@ -105,18 +132,6 @@ const Requests = () => {
   const goToLecturerProfile = () => {
     navigation.navigate("LecturerProfile");
   };
-
-  const requestList = [
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-  ];
 
   return (
     <View style={styles.container}>
@@ -137,19 +152,42 @@ const Requests = () => {
             </View>
             <View style={styles.tableHeader}>
               <Text style={styles.headerTitle}>Active Requests</Text>
-              <View style={styles.whiteFilterButton}>
+              <TouchableOpacity
+                style={styles.whiteFilterButton}
+                onPress={() => setShowPicker(!showPicker)}
+              >
                 <Text style={styles.whiteFilterButtonText}>Filter</Text>
                 <MaterialCommunityIcons
                   name="filter-menu"
-                  size={10}
+                  size={20} // Adjust size if needed
                   color="#C8272E"
                 />
-              </View>
+              </TouchableOpacity>
+
+              {/* TODO: ADD THE FILTERING */}
+              {/* TODO: ADD THE PAGINATION */}
+              {/* {showPicker && (
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={currentTypeFilter}
+                    onValueChange={(itemValue) => handleCurrentType(itemValue)}
+                    style={styles.picker}
+                  >
+                    {filterItems.map((item) => (
+                      <Picker.Item
+                        key={item.key}
+                        label={item.label}
+                        value={item.key}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              )} */}
             </View>
             <View style={styles.card}>
               <View style={styles.courseCardRed}>
                 <View style={styles.headerCardRed}>
-                  <Text style={styles.headerCardTitle}>Reciver</Text>
+                  <Text style={styles.headerCardTitle}>Receiver</Text>
                 </View>
                 <ScrollView>
                   {currentRequests?.map((request) => (
@@ -210,7 +248,7 @@ const Requests = () => {
               <ScrollView horizontal={true}>
                 <View style={styles.courseCardRed}>
                   <View style={styles.headerCardRed}>
-                    <Text style={styles.headerCardTitle}>Reciver</Text>
+                    <Text style={styles.headerCardTitle}>Receiver</Text>
                   </View>
                   <ScrollView>
                     {pastRequests?.map((request) => (
@@ -240,20 +278,7 @@ const Requests = () => {
                     ))}
                   </ScrollView>
                 </View>
-                {/* <View style={styles.courseCardYellow2}>
-                  <View style={styles.headerCardYellow2}>
-                    <Text style={styles.headerCardTitle2}>Status</Text>
-                  </View>
-                  <ScrollView>
-                    {pastRequests?.map((request) => (
-                      <View key={request._id} style={styles.smallCardYellow2}>
-                        <Text style={styles.smallCardTextYellow2}>
-                          {request.status}
-                        </Text>
-                      </View>
-                    ))}
-                  </ScrollView>
-                </View> */}
+
                 <View style={styles.courseCardBlue}>
                   <View style={styles.headerCardBlue}>
                     <Text style={styles.headerCardTitle}>Action</Text>
@@ -285,6 +310,17 @@ const Requests = () => {
 };
 
 const styles = StyleSheet.create({
+  pickerContainer: {
+    marginTop: 10,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    overflow: "hidden",
+  },
+  picker: {
+    width: "100%",
+  },
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
