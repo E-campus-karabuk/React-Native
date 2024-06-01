@@ -10,6 +10,8 @@ import BottomNavBar from "../shared/bottomNavbar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
+// TODO: ADD THE NOTIFICATION FUNCTIONALITY
+
 const getToken = async () => {
   const token = await SecureStore.getItemAsync("token");
   return JSON.parse(token);
