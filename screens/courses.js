@@ -24,6 +24,8 @@ const getToken = async () => {
 };
 
 const Courses = () => {
+  const navigation = useNavigation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [currentCourses, setCurrentCourses] = useState(null);
@@ -86,21 +88,18 @@ const Courses = () => {
     fetchTokenAndPastCourses();
   }, [token]);
 
-  const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // const CourseDetailsScreen = ({ route }) => {
+  //   // Extract course details from route.params
+  //   const { courseId, courseName, instructor } = route.params;
 
-  const CourseDetailsScreen = ({ route }) => {
-    // Extract course details from route.params
-    const { courseId, courseName, instructor } = route.params;
-
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Course ID: {courseId}</Text>
-        <Text>Course Name: {courseName}</Text>
-        <Text>Instructor: {instructor}</Text>
-      </View>
-    );
-  };
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <Text>Course ID: {courseId}</Text>
+  //       <Text>Course Name: {courseName}</Text>
+  //       <Text>Instructor: {instructor}</Text>
+  //     </View>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -143,6 +142,10 @@ const Courses = () => {
                       <Text style={styles.cardBlueText}>
                         {course.courseName}
                       </Text>
+                      <Text style={styles.lessonred}>
+                        Dr. {course.lecturer[0].firstName}{" "}
+                        {course.lecturer[0].lastName}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -165,7 +168,7 @@ const Courses = () => {
                       style={styles.courseCardRed}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
-                          courseId: "MAT202",
+                          courseId: course._id,
                           courseName: "Mathematics",
                           instructor: "Dr. Alex",
                         })
@@ -176,6 +179,10 @@ const Courses = () => {
                       </Text>
                       <Text style={styles.cardBlueText}>
                         {course.courseName}
+                      </Text>
+                      <Text style={styles.lessonred}>
+                        Dr. {course.lecturer[0].firstName}{" "}
+                        {course.lecturer[0].lastName}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -391,6 +398,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginLeft: "10%",
     marginTop: 2,
+    textTransform: "capitalize",
     color: "#C8272E",
   },
 

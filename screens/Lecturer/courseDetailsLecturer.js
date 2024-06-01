@@ -345,6 +345,7 @@ const styles = StyleSheet.create({
   },
   instructorRecText: {
     fontSize: 12,
+    textTransform: "capitalize",
     fontWeight: "bold",
     color: "#FFFFFF",
   },
