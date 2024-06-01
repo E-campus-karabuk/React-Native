@@ -34,6 +34,7 @@ const Chat = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [prompt, setPrompt] = useState(null);
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       setShowTopics(true);
@@ -61,16 +62,14 @@ const Chat = () => {
             `${process.env.EXPO_PUBLIC_API_URL}/api/bot/newChat`,
             {
               topic: topic,
-              prompt: message,
+              prompt: prompt,
             }
           );
           // console.log({data});
           setResponse(data);
-          setChatMessages([
-            ...chatMessages,
-            { message: data.message, isUser: false },
-          ]);
+          addBotMessage(data.answer);
           setIsLoading(false);
+          setIsFinished(false);
         }
       } catch (error) {
         console.log({ error: error.message });
@@ -85,6 +84,8 @@ const Chat = () => {
 
   const handleMessageChange = (text) => {
     setMessage(text);
+    setPrompt(text);
+    console.log({ prompt });
   };
 
   const sendMessage = () => {
