@@ -22,18 +22,6 @@ const Home = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const stylesArr = ["redrec", "greenrec", "bluerec"];
-  const scheduleData = [
-    { time: "10:00", subject: "MAT209 Mathematics", style: "redrec" },
-    { time: "11:00", subject: "PHY101 Physics", style: "greenrec" },
-    { time: "12:00", subject: "CHE102 Chemistry", style: "bluerec" },
-    { time: "01:00", subject: "BIO103 Biology", style: "redrec" },
-    { time: "02:00", subject: "CSE104 Computer Science", style: "greenrec" },
-    { time: "03:00", subject: "ENG105 English", style: "bluerec" },
-    { time: "04:00", subject: "HIS106 History", style: "redrec" },
-    { time: "05:00", subject: "GEO107 Geography", style: "greenrec" },
-    { time: "06:00", subject: "ART108 Art", style: "bluerec" },
-  ];
-
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [lessons, setLessons] = useState(null);
@@ -47,7 +35,7 @@ const Home = () => {
 
         if (token) {
           const { data } = await axios.get(
-            `${process.env.EXPO_PUBLIC_API_URL}/api/student/current`,
+            `${process.env.EXPO_PUBLIC_API_URL}/api/auth/current`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -124,6 +112,7 @@ const Home = () => {
                 <View style={styles.smallcardlessons}>
                   <ScrollView>
                     <Text style={styles.lessons}>Lessons</Text>
+                    {/* TODO: FIX THE COLORS */}
                     {lessons?.map((lesson, index) => {
                       return (
                         <View
