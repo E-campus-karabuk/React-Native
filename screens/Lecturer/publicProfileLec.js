@@ -1,19 +1,22 @@
 import React, { useLayoutEffect, useState } from "react";
 import {
   View,
-  Text,
   Image,
+  Text,
+  StatusBar,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Drawer from "../shared/drawer";
-import BottomNavBar from "../shared/bottomNavbar";
-
+import { FontAwesome } from "@expo/vector-icons";
+import Drawer from "../../shared/drawer";
+import BottomNavBar from "../../shared/bottomNavbar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
@@ -22,14 +25,10 @@ const getToken = async () => {
   return JSON.parse(token);
 };
 
-const LecturerProfile = () => {
-  const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+const PublicProfileLec = ({ route }) => {
+  const { lecId } = route.params;
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
-  const [selectedDay, setSelectedDay] = useState("Mon");
-  const [courseData, setCourseData] = useState(null);
 
   useLayoutEffect(() => {
     const fetchTokenAndProfile = async () => {
@@ -40,7 +39,7 @@ const LecturerProfile = () => {
 
         if (token) {
           const { data } = await axios.get(
-            `${process.env.EXPO_PUBLIC_API_URL}/api/academician/current`,
+            `${process.env.EXPO_PUBLIC_API_URL}/api/academician/${lecId}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -59,6 +58,10 @@ const LecturerProfile = () => {
     fetchTokenAndProfile();
   }, [token]);
 
+  console.log({ response });
+  const [selectedDay, setSelectedDay] = useState("Mon");
+  const [courseData, setCourseData] = useState(null);
+
   useLayoutEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -73,14 +76,17 @@ const LecturerProfile = () => {
             }
           );
           setCourseData(data);
-          console.log({ courses: data });
+          // console.log({ courses: data });
         }
       } catch (error) {
         console.log({ erorr: error.message });
       }
     };
     fetchCourses();
-  }, [selectedDay]);
+  }, [token, selectedDay]);
+
+  const navigation = useNavigation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -88,21 +94,23 @@ const LecturerProfile = () => {
   const handleLogOut = () => {
     navigation.navigate("E-campus");
   };
-  const handleBottomNavBar = (screenName) => {
-    navigation.navigate(screenName);
-  };
 
   const handleDrawerItemPress = (screenName) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false); // Close the drawer after navigating
   };
 
+  const handleBottomNavBar = (screenName) => {
+    navigation.navigate(screenName);
+  };
+  // Initial selected day is Monday
+
   const renderTimetable = () => {
     // Logic to render timetable based on selected day
 
     return (
       <>
-        {/* Timetable for Monday */}
+        {/* TODO: FIX THE COLORS */}
 
         {courseData?.map((course) => {
           return (
@@ -117,6 +125,7 @@ const LecturerProfile = () => {
       </>
     );
   };
+
   return (
     <View style={styles.container}>
       <Drawer
@@ -131,33 +140,35 @@ const LecturerProfile = () => {
             <View style={styles.HeaderRed}>
               {response?.user?.sex === "male" && (
                 <Image
-                  source={require(`../assets/profile-user.png`)}
+                  source={require(`../../assets/profile-user.png`)}
                   style={styles.avatar}
                 />
               )}
               {response?.user?.sex === "female" && (
                 <Image
-                  source={require(`../assets/avatar-girl.png`)}
+                  source={require(`../../assets/avatar-girl.png`)}
                   style={styles.avatar}
                 />
               )}
             </View>
             <Text style={styles.username}>
-              {response?.data?.position} {response?.user?.firstName}{" "}
-              {response?.user?.lastName}
+              {response?.user?.firstName} {response?.user?.lastName}
             </Text>
-
+            <Text style={styles.stdNum}>{response?.user?.registerNo}</Text>
             <View style={styles.majorRec}>
-              <FontAwesome name="graduation-cap" size={20} color="white" />
               <Text style={styles.majorRecText}>
-                Computer Engineering - Faculty of Engineering
+                <FontAwesome name="graduation-cap" size={20} color="white" />
+                {response?.data?.departmentId?.name} -{" "}
+                {response?.data?.departmentId?.faculty?.name}
               </Text>
             </View>
-            <View style={styles.majorRec}>
+
+            {/* <View style={styles.majorRec}>
               <FontAwesome5 name="id-card-alt" size={20} color="white" />
               <Text style={styles.majorRecText}>Internship Administrator </Text>
-            </View>
-            <Text style={styles.heading}>Timetable </Text>
+            </View> */}
+
+            <Text style={styles.heading}>My Timetable</Text>
             <View style={styles.card}>
               <View style={styles.weekdaysContainer}>
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
@@ -205,7 +216,7 @@ const LecturerProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#ffffff",
   },
   mainContent: {
     zIndex: 0,
@@ -327,7 +338,6 @@ const styles = StyleSheet.create({
     marginLeft: "42%",
     marginTop: 15,
     color: "#223F76",
-    marginBottom: "5%",
     textTransform: "capitalize",
   },
   stdNum: {
@@ -339,26 +349,25 @@ const styles = StyleSheet.create({
   },
 
   majorRec: {
-    flexDirection: "row",
     flexShrink: 0,
     alignItems: "center",
     height: 30,
     backgroundColor: "#223F76",
     paddingTop: 5,
     paddingBottom: 2,
-    paddingHorizontal: "5%",
-    width: "auto",
+    paddingHorizontal: 2,
+    width: 375,
     borderRadius: 4,
     marginTop: 30,
     marginHorizontal: 10,
   },
   majorRecText: {
-    marginHorizontal: "5%",
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
     color: "#FFFFFF",
   },
+
   smallRedRecContainer: {
     flexDirection: "row",
     paddingHorizontal: 16,
@@ -493,4 +502,5 @@ const styles = StyleSheet.create({
     color: "#C8272E",
   },
 });
-export default LecturerProfile;
+
+export default PublicProfileLec;

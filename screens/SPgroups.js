@@ -115,14 +115,18 @@ const SPgroups = () => {
                 })}
               </View>
             </View>
-
-            <TouchableOpacity onPress={goToLecturerProfile}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("PublicProfileLec", {
+                  lecId: response?.lecturer?._id,
+                });
+              }}
+            >
               <View style={styles.instructorRec}>
                 <Image
                   source={require("../assets/avatar-man-square.png")}
                   style={styles.avatar}
                 />
-
                 <View style={styles.textContainer}>
                   <Text style={styles.instructorRecText}>
                     Dr. {response?.lecturer?.firstName}{" "}
