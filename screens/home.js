@@ -141,7 +141,7 @@ const Home = () => {
                     >
                       <Text style={styles.subsubtext}>{item.time}</Text>
                       <Text style={styles.subsubredtext}>
-                        {item.courseCode}
+                        {item.courseName}
                       </Text>
                     </View>
                   ))}
@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "left",
     marginLeft: "10%",
-    marginTop: "90%",
+    marginTop: "50%",
     marginBottom: 7,
     color: "#595959",
   },

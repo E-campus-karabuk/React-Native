@@ -116,15 +116,16 @@ const Chat = () => {
               <Text style={styles.avatarText}>AI</Text>
             </View>
             <View style={styles.messageContent}>
-              <Text>Hey How can i help you today?</Text>
+              <Text>Hi, Which topic do you wanna chat about?</Text>
             </View>
           </View>
         </View>
         {/* Add more message containers as needed */}
         {showTopics && !disableTopic && (
           <View style={styles.topicsContainer}>
-            {topics.map((topic) => (
+            {topics.map((topic, index) => (
               <Text
+                key={index}
                 style={styles.topicButton}
                 onPress={() => handleTopicChange(Object.keys(topic)[0])}
               >
