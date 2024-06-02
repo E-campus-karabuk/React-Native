@@ -169,7 +169,7 @@ const SPgroups = () => {
                             {report?.description}
                           </Text>
                           <Text style={styles.tableCardDate}>
-                            {new Date(report.createdAt).toLocaleDateString()}
+                            {new Date(report?.createdAt).toLocaleDateString()}
                           </Text>
                         </View>
                       </TouchableOpacity>
@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
   membersContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "2px",
     justifyContent: "center",
     marginLeft: 10,
   },
