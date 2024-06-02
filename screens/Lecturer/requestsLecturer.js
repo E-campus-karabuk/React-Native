@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,10 +14,119 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Drawer from "../../shared/drawer";
 import BottomNavBar from "../../shared/bottomNavbar";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 const RequestsLecturer = () => {
+  const [token, setToken] = useState(null);
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // current
+  const [currentRequests, setCurrentRequests] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentTotalPage, setTotalCurrentPage] = useState(1);
+  const [currentTypeFilter, setCurrentTypeFilter] = useState("");
+
+  const handleCurrentType = (key) => {
+    setCurrentTypeFilter(key);
+    setShowPicker(false); // Hide the picker after selection
+  };
+
+  // past
+  const [pastRequests, setPastRequests] = useState(null);
+  const [pastPage, setPastPage] = useState(1);
+  const [pastTotalPage, setTotalPastPage] = useState(1);
+  const [pastTypeFilter, setPastTypeFilter] = useState("");
+
+  const handlePastType = (key) => {
+    setPastTypeFilter(key);
+  };
+
+  const [showPicker, setShowPicker] = useState(false);
+
+  const filterItems = [
+    {
+      key: "",
+      label: "All",
+    },
+    {
+      key: "internship",
+      label: "Internship",
+    },
+    {
+      key: "gradeObjection",
+      label: "Grade Objection",
+    },
+    {
+      key: "recommendationLetter",
+      label: "Recommendation Letter",
+    },
+  ];
+
+  // current fetch
+  useLayoutEffect(() => {
+    const fetchCurrentRequests = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/request/lecturer?status=unreplied&page=${currentPage}&type=${currentTypeFilter}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setCurrentRequests(data.studentRequests);
+          setTotalCurrentPage(data.totalPages);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchCurrentRequests();
+  }, [token, currentPage, currentTypeFilter]);
+
+  // past fetch
+  useLayoutEffect(() => {
+    const fetchPastRequests = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in stat
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/request/lecturer?status=replied&page=${pastPage}&type=${pastTypeFilter}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setPastRequests(data.studentRequests);
+          setTotalPastPage(data.totalPages);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchPastRequests();
+  }, [token, pastPage, pastTypeFilter]);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -36,17 +145,7 @@ const RequestsLecturer = () => {
   const goToLecturerProfile = () => {
     navigation.navigate("LecturerProfile");
   };
-  const requestList = [
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-    { receiver: "Prof.Ilhami ORAK", requestType: "Internship" },
-  ];
+
   return (
     <View style={styles.container}>
       <Drawer
@@ -76,11 +175,13 @@ const RequestsLecturer = () => {
                   <Text style={styles.headerCardTitle}>Reciver</Text>
                 </View>
                 <ScrollView>
-                  {requestList.map((item, index) => (
-                    <View key={index} style={styles.smallCardRed}>
+                  {currentRequests?.map((request) => (
+                    <View key={request._id} style={styles.smallCardRed}>
                       <TouchableOpacity onPress={goToLecturerProfile}>
                         <Text style={styles.smallCardTextRed}>
-                          {item.receiver}
+                          {request.receiver.firstName +
+                            " " +
+                            request.receiver.lastName}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -92,10 +193,10 @@ const RequestsLecturer = () => {
                   <Text style={styles.headerCardTitle}>Request Type</Text>
                 </View>
                 <ScrollView>
-                  {requestList.map((item, index) => (
-                    <View key={index + 10} style={styles.smallCardGreen}>
+                  {currentRequests?.map((request) => (
+                    <View key={request._id} style={styles.smallCardGreen}>
                       <Text style={styles.smallCardTextGreen}>
-                        {item.requestType}
+                        {request.type}
                       </Text>
                     </View>
                   ))}
@@ -106,7 +207,7 @@ const RequestsLecturer = () => {
                   <Text style={styles.headerCardTitle}>Action</Text>
                 </View>
                 <ScrollView>
-                  {requestList.map((item, index) => (
+                  {currentRequests?.map((request) => (
                     <View style={styles.smallCardBlue}>
                       <View style={styles.smallCardWhite}>
                         <Text style={styles.smallCardTextBlue}>Show</Text>
@@ -129,59 +230,48 @@ const RequestsLecturer = () => {
             </View>
             <View style={styles.card2}>
               <ScrollView horizontal={true}>
-                <View style={styles.courseCardRed2}>
-                  <View style={styles.headerCardRed2}>
-                    <Text style={styles.headerCardTitle2}>Reciver</Text>
+                <View style={styles.courseCardRed}>
+                  <View style={styles.headerCardRed}>
+                    <Text style={styles.headerCardTitle}>Receiver</Text>
                   </View>
                   <ScrollView>
-                    {requestList.map((item, index) => (
-                      <View key={index} style={styles.smallCardRed2}>
+                    {pastRequests?.map((request) => (
+                      <View key={request._id} style={styles.smallCardRed}>
                         <TouchableOpacity onPress={goToLecturerProfile}>
-                          <Text style={styles.smallCardTextRed2}>
-                            {item.receiver}
+                          <Text style={styles.smallCardTextRed}>
+                            {request.receiver.firstName +
+                              " " +
+                              request.receiver.lastName}
                           </Text>
                         </TouchableOpacity>
                       </View>
                     ))}
                   </ScrollView>
                 </View>
-                <View style={styles.courseCardGreen2}>
-                  <View style={styles.headerCardGreen2}>
-                    <Text style={styles.headerCardTitle2}>Request Type</Text>
+                <View style={styles.courseCardGreen}>
+                  <View style={styles.headerCardGreen}>
+                    <Text style={styles.headerCardTitle}>Request Type</Text>
                   </View>
                   <ScrollView>
-                    {requestList.map((item, index) => (
-                      <View key={index + 10} style={styles.smallCardGreen2}>
-                        <Text style={styles.smallCardTextGreen2}>
-                          {item.requestType}
+                    {pastRequests?.map((request) => (
+                      <View key={request._id} style={styles.smallCardGreen}>
+                        <Text style={styles.smallCardTextGreen}>
+                          {request.type}
                         </Text>
                       </View>
                     ))}
                   </ScrollView>
                 </View>
-                <View style={styles.courseCardYellow2}>
-                  <View style={styles.headerCardYellow2}>
-                    <Text style={styles.headerCardTitle2}>Request Type</Text>
-                  </View>
-                  <ScrollView>
-                    {requestList.map((item, index) => (
-                      <View key={index + 20} style={styles.smallCardYellow2}>
-                        <Text style={styles.smallCardTextYellow2}>
-                          {item.requestType}
-                        </Text>
-                      </View>
-                    ))}
-                  </ScrollView>
-                </View>
-                <View style={styles.courseCardBlue2}>
-                  <View style={styles.headerCardBlue2}>
+
+                <View style={styles.courseCardBlue}>
+                  <View style={styles.headerCardBlue}>
                     <Text style={styles.headerCardTitle2}>Action</Text>
                   </View>
                   <ScrollView>
-                    {requestList.map((item, index) => (
-                      <View style={styles.smallCardBlue2}>
-                        <View style={styles.smallCardWhite2}>
-                          <Text style={styles.smallCardTextBlue2}>Show</Text>
+                    {pastRequests?.map((request) => (
+                      <View style={styles.smallCardBlue}>
+                        <View style={styles.smallCardWhite}>
+                          <Text style={styles.smallCardTextBlue}>Show</Text>
                         </View>
                       </View>
                     ))}
@@ -201,7 +291,7 @@ const RequestsLecturer = () => {
         </TouchableOpacity>
       )}
 
-      {!isDrawerOpen && <BottomNavBar isLecturer={true} />}
+      {!isDrawerOpen && <BottomNavBar isLecturer={false} />}
     </View>
   );
 };

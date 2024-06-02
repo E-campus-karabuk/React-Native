@@ -24,6 +24,8 @@ const getToken = async () => {
 
 const Requests = () => {
   const [token, setToken] = useState(null);
+  const navigation = useNavigation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // current
   const [currentRequests, setCurrentRequests] = useState(null);
@@ -125,9 +127,6 @@ const Requests = () => {
 
     fetchPastRequests();
   }, [token, pastPage, pastTypeFilter]);
-
-  const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const goToLecturerProfile = () => {
     navigation.navigate("LecturerProfile");
