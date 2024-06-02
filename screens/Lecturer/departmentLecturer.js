@@ -167,19 +167,7 @@ const Department = () => {
               </View>
             </View>
             <Text style={styles.heading}>Instructors</Text>
-            <View style={styles.lecturerCard}>
-              <Image
-                source={require("../../assets/profile-user.png")}
-                style={styles.avatar}
-              />
-              <Text style={styles.lecturerText}>
-                {response?.departmentHead?.firstName}{" "}
-                {response?.departmentHead?.lastName}
-              </Text>
-              <Text style={styles.lecturerPosition}>
-                Head of the department
-              </Text>
-            </View>
+
             <View style={styles.lecturersContainer}>
               {response?.workers?.map((worker) => {
                 return (
@@ -234,7 +222,7 @@ const Department = () => {
                 </Text>
               </TouchableOpacity>
               {dropdownOpenState.firstYear && (
-                <View style={styles.dropdownContent}>
+                <ScrollView horizontal style={styles.dropdownContent}>
                   {response?.corses?.map((course) => {
                     if (course.year == 1)
                       return (
@@ -250,7 +238,7 @@ const Department = () => {
                         </View>
                       );
                   })}
-                </View>
+                </ScrollView>
               )}
             </View>
 
@@ -276,7 +264,7 @@ const Department = () => {
                   </Text>
                 </TouchableOpacity>
                 {dropdownOpenState.secondYear && (
-                  <View style={styles.dropdownContent}>
+                  <ScrollView horizontal style={styles.dropdownContent}>
                     {response?.corses?.map((course) => {
                       if (course.year == 2)
                         return (
@@ -292,7 +280,7 @@ const Department = () => {
                           </View>
                         );
                     })}
-                  </View>
+                  </ScrollView>
                 )}
               </View>
 
@@ -317,7 +305,7 @@ const Department = () => {
                   </Text>
                 </TouchableOpacity>
                 {dropdownOpenState.thirdYear && (
-                  <View style={styles.dropdownContent}>
+                  <ScrollView horizontal style={styles.dropdownContent}>
                     {response?.corses?.map((course) => {
                       if (course.year == 3)
                         return (
@@ -333,7 +321,7 @@ const Department = () => {
                           </View>
                         );
                     })}
-                  </View>
+                  </ScrollView>
                 )}
               </View>
 
@@ -358,7 +346,7 @@ const Department = () => {
                   </Text>
                 </TouchableOpacity>
                 {dropdownOpenState.fourthYear && (
-                  <View style={styles.dropdownContent}>
+                  <ScrollView horizontal style={styles.dropdownContent}>
                     {response?.corses?.map((course) => {
                       if (course.year == 4)
                         return (
@@ -374,7 +362,7 @@ const Department = () => {
                           </View>
                         );
                     })}
-                  </View>
+                  </ScrollView>
                 )}
               </View>
             </View>

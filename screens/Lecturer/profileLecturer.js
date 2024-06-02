@@ -73,14 +73,14 @@ const LecturerProfile = () => {
             }
           );
           setCourseData(data);
-          console.log({ courses: data });
+          // console.log({ courses: data });
         }
       } catch (error) {
         console.log({ erorr: error.message });
       }
     };
     fetchCourses();
-  }, [selectedDay]);
+  }, [token, selectedDay]);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
