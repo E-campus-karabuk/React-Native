@@ -161,6 +161,9 @@ const SPgroups = () => {
                           <Text style={styles.tableCardHeading}>
                             {report?.title}
                           </Text>
+                          <Text style={styles.textDesc}>
+                            {report?.description}
+                          </Text>
                           <Text style={styles.tableCardDate}>
                             {new Date(report.createdAt).toLocaleDateString()}
                           </Text>
@@ -198,6 +201,12 @@ const styles = StyleSheet.create({
     height: "82%",
     left: 0,
     right: 0,
+  },
+  textDesc: {
+    marginLeft: "11%",
+    fontSize: 11,
+    marginTop: 2,
+    color: "#1F3D75",
   },
   membersContainer: {
     display: "grid",
