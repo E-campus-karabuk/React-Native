@@ -53,23 +53,7 @@ const SPgroupsLecturer = () => {
         <View style={styles.mainContent}>
           <ScrollView>
             <Text style={styles.heading}>Senior Project Group</Text>
-            <View style={styles.tableHeaderNotification}>
-              <TouchableOpacity style={styles.whiteFilterButtonMid}>
-                <Text style={styles.whiteFilterButtonTextNotification}>
-                  Add Group +
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.whiteFilterButtonNotification}>
-                <Text style={styles.whiteFilterButtonTextNotification}>
-                  Filter
-                </Text>
-                <MaterialCommunityIcons
-                  name="filter-menu"
-                  size={15}
-                  color="#C8272E"
-                />
-              </TouchableOpacity>
-            </View>
+          
             <View style={styles.card}>
               <ScrollView>
                 <TouchableOpacity
@@ -86,14 +70,7 @@ const SPgroupsLecturer = () => {
                       <Text style={styles.tableCardDate}>View Details</Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.cardIconContainer}>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <Feather name="edit-2" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <AntDesign name="delete" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                  </View>
+                 
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.smallcard}
@@ -109,14 +86,7 @@ const SPgroupsLecturer = () => {
                       <Text style={styles.tableCardDate}>View Details</Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.cardIconContainer}>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <Feather name="edit-2" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <AntDesign name="delete" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                  </View>
+                  
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.smallcard}
@@ -132,14 +102,7 @@ const SPgroupsLecturer = () => {
                       <Text style={styles.tableCardDate}>View Details</Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.cardIconContainer}>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <Feather name="edit-2" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <AntDesign name="delete" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                  </View>
+                 
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.smallcard}

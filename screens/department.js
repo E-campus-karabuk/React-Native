@@ -227,14 +227,14 @@ const Department = () => {
                     if (course.year == 1)
                       return (
                         <View style={styles.smester} key={course._id}>
-                          <Text style={styles.semesterHeading}>
-                            {course.name}
-                          </Text>
                           <View style={styles.ClassCardContainer}>
-                            <View style={styles.semsterClassCardRed}>
-                              <Text>{course.code}</Text>
+                              <View style={styles.semsterClassCardRed}>
+                              <Text style={styles.semesterHeading}>
+                                  {course.name}
+                                 </Text>
+                                <Text style={styles.semesterHeading}>{course.code}</Text>
+                              </View>
                             </View>
-                          </View>
                         </View>
                       );
                   })}
@@ -269,12 +269,12 @@ const Department = () => {
                       if (course.year == 2)
                         return (
                           <View style={styles.smester} key={course._id}>
-                            <Text style={styles.semesterHeading}>
-                              {course.name}
-                            </Text>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                                <Text>{course.code}</Text>
+                              <Text style={styles.semesterHeading}>
+                                  {course.name}
+                                 </Text>
+                                <Text style={styles.semesterHeading}>{course.code}</Text>
                               </View>
                             </View>
                           </View>
@@ -310,12 +310,12 @@ const Department = () => {
                       if (course.year == 3)
                         return (
                           <View style={styles.smester} key={course._id}>
-                            <Text style={styles.semesterHeading}>
-                              {course.name}
-                            </Text>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                                <Text>{course.code}</Text>
+                              <Text style={styles.semesterHeading}>
+                                  {course.name}
+                                 </Text>
+                                <Text style={styles.semesterHeading}>{course.code}</Text>
                               </View>
                             </View>
                           </View>
@@ -351,12 +351,12 @@ const Department = () => {
                       if (course.year == 4)
                         return (
                           <View style={styles.smester} key={course._id}>
-                            <Text style={styles.semesterHeading}>
-                              {course.name}
-                            </Text>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                                <Text>{course.code}</Text>
+                                 <Text style={styles.semesterHeading}>
+                                  {course.name}
+                                 </Text>
+                                <Text style={styles.semesterHeading}>{course.code}</Text>
                               </View>
                             </View>
                           </View>
@@ -566,11 +566,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   lecturerText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "bold",
     textAlign: "center",
     marginTop: 10,
     color: "#223F76",
+    paddingHorizontal:'5%'
   },
   lecturerPosition: {
     fontSize: 10,
@@ -592,13 +593,15 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   lecturerCard: {
-    margin: 10,
+    width:100,
+    marginHorizontal: 'auto',
+    marginVertical:'5%',
     alignItems: "center",
   },
   lecturersContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    flexWrap: "wrap", // Add this line
+    flexWrap: "wrap",
   },
   backgroundDivider: {
     flexDirection: "column",
@@ -640,7 +643,7 @@ const styles = StyleSheet.create({
     marginBottom: "10%",
   },
   expanded: {
-    paddingBottom: 100, // Adjust as needed to accommodate the dropdown content
+    paddingBottom: 20, // Adjust as needed to accommodate the dropdown content
   },
   Rectangletitle: {
     fontSize: 18,
@@ -663,8 +666,7 @@ const styles = StyleSheet.create({
   },
   dropdownContent: {
     top: 10,
-    width: "100%",
-    backgroundColor: "#F5F5F5",
+    width: 'auto',
     padding: 10,
     zIndex: 1,
     flexDirection: "row",
@@ -694,16 +696,15 @@ const styles = StyleSheet.create({
   },
 
   semsterClassCardRed: {
-    width: 67,
-    height: 79,
+    width: 'auto',
+    height: 'auto',
     borderRadius: 4,
-    backgroundColor: "#FFE6E6",
+    backgroundColor: "#FFFFFF",
     shadowColor: "rgba(0, 0, 0, 0.08)",
     shadowOffset: { width: 4, height: 4 },
     shadowOpacity: 1,
     shadowRadius: 4,
     elevation: 4,
-    marginRight: 10,
     alignItems: "center",
     padding: 4,
   },
