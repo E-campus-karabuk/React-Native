@@ -64,7 +64,7 @@ const STDProfile = () => {
       try {
         if (token) {
           const { data } = await axios.get(
-            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?day=${selectedDay}`,
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?day=${selectedDay}&filter=current`,
             {
               headers: {
                 "Content-Type": "application/json",
