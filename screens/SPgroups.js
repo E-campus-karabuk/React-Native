@@ -144,11 +144,14 @@ const SPgroups = () => {
                       <TouchableOpacity
                         key={index}
                         style={styles.smallcard}
-                        onPress={() =>
-                          Linking.openURL(
-                            `${process.env.EXPO_PUBLIC_API_URL}/${report?.file}`
-                          )
-                        }
+                        onPress={() => {
+                          const fixedURL =
+                            `${process.env.EXPO_PUBLIC_API_URL}/${report?.file}`.replace(
+                              /\\/g,
+                              "/"
+                            );
+                          Linking.openURL(fixedURL);
+                        }}
                       >
                         <Image
                           source={require("../assets/pdf.png")}
