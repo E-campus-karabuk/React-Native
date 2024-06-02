@@ -154,7 +154,10 @@ const Notifications = () => {
         </View>
       )}
       {!isDrawerOpen && (
-        <TouchableOpacity style={styles.chatpot}>
+        <TouchableOpacity
+          style={styles.chatpot}
+          onPress={() => navigation.navigate("Chat")}
+        >
           <Ionicons name="help-circle-sharp" size={30} color="white" />
         </TouchableOpacity>
       )}

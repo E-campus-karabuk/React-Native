@@ -456,8 +456,10 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flexDirection: "row",
+
     paddingHorizontal: 16,
     marginTop: 20,
+    marginBottom: 15,
   },
 
   courseCardRed: {
