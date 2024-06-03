@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,22 +14,73 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Drawer from "../../shared/drawer";
 import BottomNavBar from "../../shared/bottomNavbar";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 const HomeLecturer = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const stylesArr = ["redrec", "greenrec", "bluerec", "yellowrec"];
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
+  const [lessons, setLessons] = useState(null);
 
-  const scheduleData = [
-    { time: "10:00", subject: "MAT209 Mathematics", style: "redrec" },
-    { time: "11:00", subject: "PHY101 Physics", style: "greenrec" },
-    { time: "12:00", subject: "CHE102 Chemistry", style: "bluerec" },
-    { time: "01:00", subject: "BIO103 Biology", style: "redrec" },
-    { time: "02:00", subject: "CSE104 Computer Science", style: "greenrec" },
-    { time: "03:00", subject: "ENG105 English", style: "bluerec" },
-    { time: "04:00", subject: "HIS106 History", style: "redrec" },
-    { time: "05:00", subject: "GEO107 Geography", style: "greenrec" },
-    { time: "06:00", subject: "ART108 Art", style: "bluerec" },
-  ];
+  useLayoutEffect(() => {
+    const fetchTokenAndProfile = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/auth/current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setResponse(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchTokenAndProfile();
+  }, [token]);
+
+  useLayoutEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/course/list/mine?filter=current`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setLessons(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchLessons();
+  }, [token]);
 
   return (
     <View style={styles.container}>
@@ -50,25 +101,30 @@ const HomeLecturer = () => {
             <View style={styles.card}>
               <View style={styles.smallcardcontainer}>
                 <View style={styles.smallcard}>
-                  <Text style={styles.month}>March</Text>
-                  <Text style={styles.day}>03</Text>
-                  <Text style={styles.weekday}>Monday</Text>
+                  <Text style={styles.month}>
+                    {new Date().toLocaleString("en-TR", { month: "long" })}
+                  </Text>
+                  <Text style={styles.day}>{new Date().getDate()}</Text>
+                  <Text style={styles.weekday}>
+                    {new Date().toLocaleString("en-TR", { weekday: "long" })}
+                  </Text>
                 </View>
                 <View style={styles.smallcardlessons}>
                   <ScrollView>
-                    <Text style={styles.lessons}>Lessons</Text>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessonred}>Mathematics</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessongray}>Programming</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessonred}>Mathematics</Text>
-                    </View>
-                    <View style={styles.whiterec}>
-                      <Text style={styles.lessongray}>Programming</Text>
-                    </View>
+                    {lessons?.map((lesson, index) => {
+                      return (
+                        <View
+                          style={styles[stylesArr[index % stylesArr.length]]}
+                          key={index}
+                        >
+                          <Text style={styles.lessongray}>
+                            {lesson.courseName.length > 15
+                              ? lesson.courseName.substring(0, 15) + "..."
+                              : lesson.courseName}
+                          </Text>
+                        </View>
+                      );
+                    })}
                   </ScrollView>
                 </View>
               </View>
@@ -76,10 +132,15 @@ const HomeLecturer = () => {
               <View style={styles.recscontainer}>
                 <Text style={styles.subhead}>Timeline</Text>
                 <ScrollView>
-                  {scheduleData.map((item, index) => (
-                    <View key={index} style={styles[item.style]}>
+                  {lessons?.map((item, index) => (
+                    <View
+                      key={index}
+                      style={styles[stylesArr[index % stylesArr.length]]}
+                    >
                       <Text style={styles.subsubtext}>{item.time}</Text>
-                      <Text style={styles.subsubredtext}>{item.subject}</Text>
+                      <Text style={styles.subsubredtext}>
+                        {item.courseName}
+                      </Text>
                     </View>
                   ))}
                 </ScrollView>
@@ -92,50 +153,32 @@ const HomeLecturer = () => {
               contentContainerStyle={{ paddingHorizontal: 20 }}
             >
               <View style={styles.cardContainer}>
-                <TouchableOpacity
-                  style={styles.courseCardRed}
-                  onPress={() =>
-                    navigation.navigate("CourseDetailsLecturer", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>MAT202</Text>
-                  <Text style={styles.cardBlueText}>Mathematics</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.courseCardGreen}
-                  onPress={() =>
-                    navigation.navigate("CourseDetailsLecturer", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>MAT202</Text>
-                  <Text style={styles.cardBlueText}>Mathematics</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.courseCardBlue}
-                  onPress={() =>
-                    navigation.navigate("CourseDetailsLecturer", {
-                      courseId: "MAT202",
-                      courseName: "Mathematics",
-                      instructor: "Dr. Alex",
-                    })
-                  }
-                >
-                  <Text style={styles.cardGrayText}>PRG202</Text>
-                  <Text style={styles.cardBlueText}>Programming</Text>
-                  <Text style={styles.lessonred}>Dr. Alex</Text>
-                </TouchableOpacity>
+                {lessons?.map((lesson, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.courseCardRed}
+                      onPress={() =>
+                        navigation.navigate("CourseDetails", {
+                          courseId: "MAT202",
+                          courseName: "Mathematics",
+                          instructor: "Dr. Alex",
+                        })
+                      }
+                    >
+                      <Text style={styles.cardGrayText}>
+                        {lesson.courseCode}
+                      </Text>
+                      <Text style={styles.cardBlueText}>
+                        {lesson.courseName}
+                      </Text>
+                      <Text style={styles.lessonred}>
+                        {lesson.lecturer[0].firstName}{" "}
+                        {lesson.lecturer[0].lastName}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </ScrollView>
           </ScrollView>
