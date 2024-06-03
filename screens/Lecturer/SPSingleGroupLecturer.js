@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,10 +19,76 @@ import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Drawer from "../../shared/drawer";
 import BottomNavBar from "../../shared/bottomNavbar";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 
-const SPSingleGroupLecturer = () => {
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
+
+const SPSingleGroupLecturer = ({ route }) => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { groupId } = route.params;
+  const [token, setToken] = useState(null);
+  const [group, setGroup] = useState(null);
+  const [groupReports, setGroupReports] = useState(null);
+
+  useLayoutEffect(() => {
+    const fetchGroup = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/senior/${groupId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setGroup(data.group);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchGroup();
+  }, []);
+
+  useLayoutEffect(() => {
+    const fetchGroupReports = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/senior/files/${groupId}`,
+            // ?page=${reportsPage}&title=${reportTitle} for the search and pagination
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setGroupReports(data);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchGroupReports();
+  }, []);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -63,9 +130,13 @@ const SPSingleGroupLecturer = () => {
                 />
                 <Text style={styles.redHeading}> Members</Text>
               </View>
-              <Text style={styles.members}> 1. Nisreen Bouta</Text>
-              <Text style={styles.members}> 2. Sara James</Text>
-              <Text style={styles.members}> 3. Luke Hemmings</Text>
+              {group?.students?.map((groupMember, index) => {
+                return (
+                  <Text style={styles.members} key={index}>
+                    {index + 1}. {groupMember.firstName} {groupMember.lastName}
+                  </Text>
+                );
+              })}
             </View>
 
             <TouchableOpacity onPress={goToLecturerProfile}>
@@ -75,66 +146,56 @@ const SPSingleGroupLecturer = () => {
                   style={styles.avatar}
                 />
 
-                <View style={styles.textContainer}>
-                  <Text style={styles.instructorRecText}>Dr. Sam Felix</Text>
+                <View
+                  style={styles.textContainer}
+                  onPress={() => {
+                    navigation.navigate("PublicProfileLec", {
+                      lecId: response?.lecturer?._id,
+                    });
+                  }}
+                >
+                  <Text style={styles.instructorRecText}>
+                    Dr. {group?.lecturer?.firstName} {group?.lecturer?.lastName}
+                  </Text>
                   <Text style={styles.viewProfileText}>View Profile</Text>
                 </View>
               </View>
             </TouchableOpacity>
 
             <View style={styles.tableHeader}>
-            <Text style={styles.headingRecText}> Files & Reports</Text>
+              <Text style={styles.headingRecText}>Files & Reports</Text>
             </View>
             <View style={styles.card}>
               <ScrollView>
-                <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                    source={require("../../assets/pdf.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>
-                      Report week 1.pdf
-                    </Text>
-                    <Text style={styles.tableCardDate}>1/1/2024</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                    source={require("../../assets/pdf.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>
-                      Report week 2.pdf
-                    </Text>
-                    <Text style={styles.tableCardDate}>1/1/2024</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                    source={require("../../assets/pdf.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>
-                      Report Week 3.pdf
-                    </Text>
-                    <Text style={styles.tableCardDate}>1/1/2024</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.smallcard}>
-                  <Image
-                    source={require("../../assets/pdf.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>
-                      Report week 4.pdf
-                    </Text>
-                    <Text style={styles.tableCardDate}>1/1/2024</Text>
-                  </View>
-                </TouchableOpacity>
+                {groupReports?.reports.map((report, index) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.smallcard}
+                      key={index}
+                      onPress={() => {
+                        const fixedURL =
+                          `${process.env.EXPO_PUBLIC_API_URL}/${report?.file}`.replace(
+                            /\\/g,
+                            "/"
+                          );
+                        Linking.openURL(fixedURL);
+                      }}
+                    >
+                      <Image
+                        source={require("../../assets/pdf.png")}
+                        style={styles.fileTypeImg}
+                      />
+                      <View style={styles.textContainerTable}>
+                        <Text style={styles.tableCardHeading}>
+                          {report?.title}
+                        </Text>
+                        <Text style={styles.tableCardDate}>
+                          {new Date(report?.createdAt).toLocaleDateString()}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             </View>
           </ScrollView>
@@ -436,7 +497,7 @@ const styles = StyleSheet.create({
     color: "#1F3D75",
   },
   headingRecText: {
-    marginLeft:10,
+    marginLeft: 10,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "left",
