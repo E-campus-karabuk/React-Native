@@ -179,21 +179,19 @@ const CourseDetailsLecturer = ({ route }) => {
                         </Text>
                       </View>
                       <View style={styles.cardIconContainer}>
-                        <View style={styles.cardIcon}>
-                          <Entypo
-                            name="dots-three-horizontal"
-                            size={13}
-                            color="#1F3D75"
-                          />
-                        </View>
-                        {/* TODO: HANDLE THE EDIT */}
-                        <View style={styles.cardIcon}>
-                          <Feather name="edit-2" size={13} color="#1F3D75" />
-                        </View>
-                        {/* TODO: HANDLE THE DELETE */}
-                        <View style={styles.cardIcon}>
-                          <AntDesign name="delete" size={13} color="#1F3D75" />
-                        </View>
+                        {/* <View style={styles.cardIcon}>
+                            <Entypo
+                              name="dots-three-horizontal"
+                              size={13}
+                              color="#1F3D75"
+                            />
+                          </View>
+                          <View style={styles.cardIcon}>
+                            <Feather name="edit-2" size={13} color="#1F3D75" />
+                          </View>
+                          <View style={styles.cardIcon}>
+                            <AntDesign name="delete" size={13} color="#1F3D75" />
+                          </View> */}
                       </View>
                     </TouchableOpacity>
                   );
