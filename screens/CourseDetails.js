@@ -81,10 +81,16 @@ const CourseDetails = ({ route }) => {
       {!isDrawerOpen && (
         <View style={styles.mainContent}>
           <ScrollView>
-            <Text style={styles.code}>{response?.courseCode}</Text> 
+            <Text style={styles.code}>{response?.courseCode}</Text>
             <Text style={styles.cName}> {response?.courseName}</Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("PublicProfileLec", {
+                  lecId: response?.lecturer[0]?._id,
+                });
+              }}
+            >
               <View style={styles.instructorRec}>
                 <Image
                   source={require("../assets/avatar-man-square.png")}
@@ -99,7 +105,6 @@ const CourseDetails = ({ route }) => {
                 </View>
               </View>
             </TouchableOpacity>
-            
             <View style={styles.tableHeader}>
               <Text style={styles.headingRecText}> Notes & Related Files</Text>
             </View>
@@ -127,7 +132,6 @@ const CourseDetails = ({ route }) => {
                           {new Date(note.createdAt).toLocaleDateString()}
                         </Text>
                       </View>
-                     
                     </TouchableOpacity>
                   );
                 })}
@@ -308,7 +312,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "left",
-    marginLeft: '3.5%',
+    marginLeft: "3.5%",
     color: "#223F76",
   },
   tableHeader: {
@@ -325,7 +329,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#E8E8E8",
   },
- 
+
   card: {
     width: 360,
     height: 322,
@@ -386,7 +390,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginLeft: "7%",
   },
-  
+
   headingRec: {
     flexShrink: 0,
     height: 37,
@@ -394,13 +398,13 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 2,
     paddingHorizontal: 15,
-    width: '100%',
+    width: "100%",
     borderRadius: 4,
     marginTop: 20,
     marginBottom: 10,
   },
   headingRecText: {
-    marginLeft:10,
+    marginLeft: 10,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "left",
