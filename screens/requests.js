@@ -225,7 +225,9 @@ const Requests = () => {
                     <View style={styles.smallCardBlue}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("RequestDetailScreen")
+                          navigation.navigate("RequestDetailScreen", {
+                            requestId: request._id,
+                          })
                         }
                       >
                         <View style={styles.smallCardWhite}>

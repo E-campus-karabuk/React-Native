@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { createStackNavigator } from "@react-navigation/stack";
 import Drawer from "../shared/drawer";
 import BottomNavBar from "../shared/bottomNavbar";
 import axios from "axios";
@@ -24,77 +22,145 @@ const getToken = async () => {
   return JSON.parse(token);
 };
 
-export default function RequestDetailScreen() {
+export default function RequestDetailScreen({ route }) {
+  const { requestId } = route.params;
+  const navigation = useNavigation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
+
+  useLayoutEffect(() => {
+    const fetchTokenAndData = async () => {
+      try {
+        const token = await getToken();
+        setToken(token);
+        console.log({ requestId });
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/request/single/student/${requestId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setResponse(data);
+        }
+      } catch (error) {
+        console.log({ errorRequestPage: error.message });
+      }
+    };
+
+    fetchTokenAndData();
+  }, [token]);
+
+  console.log({ responseReq: response });
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const handleDrawerItemPress = (screenName) => {
+    navigation.navigate(screenName);
+    setIsDrawerOpen(false);
+  };
+
+  const handleBottomNavBar = (screenName) => {
+    navigation.navigate(screenName);
+  };
+
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(date).toLocaleDateString(undefined, options);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Request Detail:</Text>
+    <View style={styles.container}>
+      <Drawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+        isLecturer={false}
+      />
 
-      <View style={styles.rowContainer}>
-        <View style={styles.card}>
-          <Text style={styles.label}>Sender Name:</Text>
-          <TextInput style={styles.input} />
-        </View>
+      {!isDrawerOpen && (
+        <View style={styles.mainContent}>
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <Text style={styles.title}>Request Details</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.label}>Request Type:</Text>
-          <TextInput style={styles.input} />
-        </View>
-      </View>
+            <View style={styles.rowContainer}>
+              <View style={styles.card}>
+                <Text style={styles.label}>Receiver Name:</Text>
+                <Text style={styles.textValue}>
+                  {response?.receiver?.firstName} {response?.receiver?.lastName}
+                </Text>
+              </View>
 
-      <View style={styles.rowContainer}>
-        <View style={styles.card}>
-          <Text style={styles.label}>Request Date:</Text>
-          <TextInput style={styles.input} />
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.label}>Request Status:</Text>
-          <TextInput style={styles.input} />
-        </View>
-      </View>
-
-      <View style={styles.filesContainer}>
-        <Text style={styles.filesLabel}>Request Files:</Text>
-        <View style={styles.fileCard}>
-          <View style={styles.fileRow}>
-            <View style={styles.fileItem}>
-              <Image
-                source={require("../assets/pdf.png")}
-                style={styles.fileImage}
-              />
-              <Text style={styles.fileExtension}>Week 3 Notes.xls</Text>
+              <View style={styles.card}>
+                <Text style={styles.label}>Request Type:</Text>
+                <Text style={styles.textValue}>{response?.type}</Text>
+              </View>
             </View>
-            <View style={styles.fileItem}>
-              <Image
-                source={require("../assets/pdf.png")}
-                style={styles.fileImage}
-              />
-              <Text style={styles.fileExtension}>Week 3 Notes.ppt</Text>
+
+            <View style={styles.rowContainer}>
+              <View style={styles.card}>
+                <Text style={styles.label}>Request Date:</Text>
+                <Text style={styles.textValue}>
+                  {formatDate(response?.createdAt)}
+                </Text>
+              </View>
+
+              <View style={styles.card}>
+                <Text style={styles.label}>Request Status:</Text>
+                <Text style={styles.textValue}>{response?.status}</Text>
+              </View>
             </View>
-          </View>
+
+            {response?.files && (
+              <View style={styles.filesContainer}>
+                <Text style={styles.filesLabel}>Request Files:</Text>
+                <View style={styles.fileCard}>
+                  <View style={styles.fileRow}>
+                    {response?.file?.map((fi, index) => {
+                      <View style={styles.fileItem} key={index}>
+                        <Image
+                          source={require("../assets/pdf.png")}
+                          style={styles.fileImage}
+                        />
+                      </View>;
+                    })}
+                  </View>
+                </View>
+              </View>
+            )}
+            <Text style={styles.contentLabel}>Request Content:</Text>
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentText}>
+                {response?.content || "No content available"}
+              </Text>
+            </View>
+
+            <Text style={styles.replyLabel}>Reply:</Text>
+            <View style={styles.replyContainer}>
+              <Text style={styles.replyInput}>
+                {response?.reply ||
+                  "No reply available from the lecturer yet.."}
+              </Text>
+            </View>
+          </ScrollView>
         </View>
-      </View>
+      )}
 
-      <Text style={styles.contentLabel}>Request Content:</Text>
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentText}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris
-        </Text>
-      </View>
-
-      <Text style={styles.replyLabel}>Reply:</Text>
-      <View style={styles.replyContainer}>
-        <TextInput style={styles.replyInput} multiline={true} />
-      </View>
-
-      <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.doneButton}>
-          <Text style={styles.doneButtonText}>Reply</Text>
+      {!isDrawerOpen && (
+        <TouchableOpacity
+          style={styles.chatpot}
+          onPress={() => navigation.navigate("Chat")}
+        >
+          <Ionicons name="help-circle-sharp" size={30} color="white" />
         </TouchableOpacity>
-      </View>
-    </ScrollView>
+      )}
+
+      {!isDrawerOpen && <BottomNavBar isLecturer={false} />}
+    </View>
   );
 }
 
@@ -108,6 +174,11 @@ const styles = StyleSheet.create({
     height: "82%",
     left: 0,
     right: 0,
+  },
+  scrollViewContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20,
   },
   navBar: {
     flexDirection: "row",
@@ -126,7 +197,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#FFFFFF",
   },
-
   drawer: {
     position: "absolute",
     top: 0,
@@ -160,7 +230,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-
   bottomNavBar: {
     position: "absolute",
     bottom: 0,
@@ -174,18 +243,15 @@ const styles = StyleSheet.create({
     paddingRight: 60,
     paddingBottom: 20,
   },
-
   bottomNavBarContent: {
     textAlign: "center",
     color: "#FFFFFF",
     marginHorizontal: "16%",
   },
-
   chatpot: {
     position: "absolute",
     bottom: 20,
     right: 20,
-
     backgroundColor: "#223F76",
     borderRadius: 30,
     width: 60,
@@ -199,7 +265,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 80,
   },
-
   heading: {
     fontSize: 25,
     fontWeight: "bold",
@@ -209,7 +274,6 @@ const styles = StyleSheet.create({
     padding: 20,
     color: "#223F76",
   },
-
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -244,11 +308,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#1F3D75",
   },
-  input: {
+  textValue: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 4,
     padding: 8,
+    color: "#1F3D75",
   },
   filesContainer: {
     marginTop: 20,
@@ -335,7 +400,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-
   replyInput: {
     borderWidth: 0,
     borderRadius: 8,
@@ -344,7 +408,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     minHeight: 100,
   },
-
   doneButton: {
     marginBottom: 60,
     backgroundColor: "#fff",
@@ -360,7 +423,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginLeft: 10,
   },
-
   doneButtonText: {
     color: "red",
     fontWeight: "500",
