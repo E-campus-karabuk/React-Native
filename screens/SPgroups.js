@@ -61,9 +61,6 @@ const SPgroups = () => {
     fetchTokenAndGroup();
   }, []);
 
-  console.log({ response: response?.students });
-  console.log({ reports });
-
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };

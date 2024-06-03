@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   TextInput,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
@@ -96,7 +97,7 @@ const CourseDetailsLecturer = ({ route }) => {
       {!isDrawerOpen && (
         <View style={styles.mainContent}>
           <ScrollView>
-          <Text style={styles.code}>{response?.courseCode}</Text> 
+            <Text style={styles.code}>{response?.courseCode}</Text>
             <Text style={styles.cName}> {response?.courseName}</Text>
             {/* <Text style={styles.describtion}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(245, 245, 245, 0.32)",
     backgroundColor: "rgba(210, 210, 210, 0.20)",
     marginLeft: 16,
-    marginTop:25,
+    marginTop: 25,
     borderWidth: 2,
     borderColor: "#E8E8E8",
   },
@@ -501,13 +502,13 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 2,
     paddingHorizontal: 15,
-    width: '100%',
+    width: "100%",
     borderRadius: 4,
     marginTop: 20,
     marginBottom: 10,
   },
   headingRecText: {
-    marginLeft:10,
+    marginLeft: 10,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "left",
@@ -525,7 +526,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "left",
-    marginLeft: '3.5%',
+    marginLeft: "3.5%",
     color: "#223F76",
   },
 });

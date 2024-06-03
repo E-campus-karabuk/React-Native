@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,10 +17,46 @@ import { AntDesign } from "@expo/vector-icons";
 import Drawer from "../../shared/drawer";
 import { Feather } from "@expo/vector-icons";
 import BottomNavBar from "../../shared/bottomNavbar";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+
+const getToken = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  return JSON.parse(token);
+};
 
 const SPgroupsLecturer = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [token, setToken] = useState(null);
+  const [response, setResponse] = useState(null);
+
+  useLayoutEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/senior/lecturer/list`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setResponse(data.seniorGroups);
+        }
+      } catch (error) {
+        console.log({ error: error.message });
+      }
+    };
+
+    fetchGroups();
+  }, []);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -37,8 +73,10 @@ const SPgroupsLecturer = () => {
   const handleBottomNavBar = (screenName) => {
     navigation.navigate(screenName);
   };
-  const goToSPgroup = () => {
-    navigation.navigate("SPSingleGroupLecturer");
+  const goToSPgroup = ({ groupId }) => {
+    navigation.navigate("SPSingleGroupLecturer", {
+      groupId: groupId,
+    });
   };
 
   return (
@@ -53,80 +91,43 @@ const SPgroupsLecturer = () => {
         <View style={styles.mainContent}>
           <ScrollView>
             <Text style={styles.heading}>Senior Project Group</Text>
-          
+
             <View style={styles.card}>
               <ScrollView>
-                <TouchableOpacity
-                  style={styles.smallcard}
-                  onPress={goToSPgroup}
-                >
-                  <Image
-                    source={require("../../assets/group.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>Group One</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.tableCardDate}>View Details</Text>
+                {response?.map((group, index) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.smallcard}
+                      onPress={() =>
+                        navigation.navigate("SPSingleGroupLecturer", {
+                          groupId: group._id,
+                        })
+                      }
+                    >
+                      <Image
+                        source={require("../../assets/group.png")}
+                        style={styles.fileTypeImg}
+                      />
+                      <View style={styles.textContainerTable}>
+                        <Text style={styles.tableCardHeading}>
+                          {group.title}
+                        </Text>
+                        <TouchableOpacity>
+                          <Text
+                            style={styles.tableCardDate}
+                            onPress={() =>
+                              navigation.navigate("SPSingleGroupLecturer", {
+                                groupId: group._id,
+                              })
+                            }
+                          >
+                            View Details
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </TouchableOpacity>
-                  </View>
-                 
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.smallcard}
-                  onPress={goToSPgroup}
-                >
-                  <Image
-                    source={require("../../assets/group.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>Group One</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.tableCardDate}>View Details</Text>
-                    </TouchableOpacity>
-                  </View>
-                  
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.smallcard}
-                  onPress={goToSPgroup}
-                >
-                  <Image
-                    source={require("../../assets/group.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>Group One</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.tableCardDate}>View Details</Text>
-                    </TouchableOpacity>
-                  </View>
-                 
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.smallcard}
-                  onPress={goToSPgroup}
-                >
-                  <Image
-                    source={require("../../assets/group.png")}
-                    style={styles.fileTypeImg}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>Group One</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.tableCardDate}>View Details</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.cardIconContainer}>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <Feather name="edit-2" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardIcon}>
-                      <AntDesign name="delete" size={13} color="#1F3D75" />
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             </View>
           </ScrollView>
