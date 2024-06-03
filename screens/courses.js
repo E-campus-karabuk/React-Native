@@ -31,6 +31,7 @@ const Courses = () => {
   const [currentCourses, setCurrentCourses] = useState(null);
   const [pastCourses, setPastCourses] = useState(null);
 
+  const cardsArr = ["courseCardRed", "courseCardGreen", "courseCardBlue","courseCardYellow"];
   useLayoutEffect(() => {
     const fetchTokenAndCourses = async () => {
       try {
@@ -123,12 +124,11 @@ const Courses = () => {
               contentContainerStyle={{ paddingHorizontal: 20 }}
             >
               <View style={styles.cardContainer}>
-                {currentCourses?.map((course) => {
+                {currentCourses?.map((course, index) => {
                   return (
-                    //  TODO: FIX THE COLORS
                     <TouchableOpacity
-                      key={course._id}
-                      style={styles.courseCardRed}
+                    key={index}
+                      style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
                           courseId: course._id,
@@ -162,12 +162,11 @@ const Courses = () => {
               contentContainerStyle={{ paddingHorizontal: 20 }}
             >
               <View style={styles.bottomcardContainer}>
-                {pastCourses?.map((course) => {
+                {pastCourses?.map((course, index) => {
                   return (
-                    //  TODO: FIX THE COLORS
                     <TouchableOpacity
-                      key={course._id}
-                      style={styles.courseCardRed}
+                    key={index}
+                    style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
                           courseId: course._id,
@@ -319,16 +318,17 @@ const styles = StyleSheet.create({
     padding: 20,
     color: "#223F76",
   },
-  cardContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    marginTop: 20,
-  },
   bottomcardContainer: {
     flexDirection: "row",
-    paddingHorizontal: 16,
+    paddingHorizontal: 4,
     marginTop: 20,
     marginBottom: 60,
+  },
+  cardContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 4,
+    marginTop: 20,
+    marginBottom: 15,
   },
 
   courseCardRed: {
@@ -376,6 +376,23 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
+  
+  courseCardYellow: {
+    width: 114,
+    height: 183,
+    borderRadius: 4,
+    backgroundColor: "#FDFFE0",
+    shadowColor: "rgba(0, 0, 0, 0.08)",
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    elevation: 4,
+    marginRight: 10,
+    alignItems: "left",
+    padding: 4,
+    marginBottom: 40,
+  },
+
 
   gradient: {
     flex: 1,
@@ -386,7 +403,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "left",
     marginLeft: "10%",
-    marginTop: "90%",
+    marginTop: "50%",
     marginBottom: 7,
     color: "#595959",
   },
@@ -398,12 +415,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
+
   lessonred: {
     fontSize: 9,
     textAlign: "left",
     marginLeft: "10%",
     marginTop: 2,
-    textTransform: "capitalize",
     color: "#C8272E",
   },
 
@@ -414,10 +431,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 2,
     paddingHorizontal: 15,
-    width: 375,
+    width: '100%',
     borderRadius: 4,
     marginTop: 20,
-    marginHorizontal: 10,
     marginBottom: 10,
     shadowColor: "rgba(0, 0, 0, 0.08)",
     shadowOffset: { width: 0, height: 4 },

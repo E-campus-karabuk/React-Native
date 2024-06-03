@@ -27,6 +27,7 @@ const getToken = async () => {
 const STDProfile = () => {
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
+  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
 
   useLayoutEffect(() => {
     const fetchTokenAndProfile = async () => {
@@ -108,9 +109,11 @@ const STDProfile = () => {
     return (
       <>
         {/* TODO: FIX THE COLORS */}
-        {courseData?.map((course) => {
+        {courseData?.map((course,index) => {
           return (
-            <View style={styles.redrec} key={course._id}>
+            <View  
+            key={index}
+            style={styles[stylesArr[index % stylesArr.length]]}>
               <Text style={styles.subsubtext}>{course.time}</Text>
               <Text style={styles.subsubredtext}>
                 {course.courseCode} {course.courseName}

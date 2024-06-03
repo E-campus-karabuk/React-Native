@@ -22,6 +22,7 @@ const Home = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
+  const cardsArr = ["courseCardRed", "courseCardGreen", "courseCardBlue","courseCardYellow"];
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [lessons, setLessons] = useState(null);
@@ -110,13 +111,13 @@ const Home = () => {
                   </Text>
                 </View>
                 <View style={styles.smallcardlessons}>
+                <Text style={styles.lessons}>Lessons</Text>
                   <ScrollView>
-                    <Text style={styles.lessons}>Lessons</Text>
                     {/* TODO: FIX THE COLORS */}
                     {lessons?.map((lesson, index) => {
                       return (
                         <View
-                          style={styles[stylesArr[index % stylesArr.length]]}
+                          style={styles.whiterec}
                           key={index}
                         >
                           <Text style={styles.lessongray}>
@@ -159,7 +160,7 @@ const Home = () => {
                   return (
                     <TouchableOpacity
                       key={index}
-                      style={styles.courseCardRed}
+                      style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
                           courseId: "MAT202",
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   smallcard: {
-    width: 100,
+    width: 110,
     height: 100,
     backgroundColor: "#FFFFFF",
     borderRadius: 4,
@@ -372,8 +373,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   smallcardlessons: {
-    width: 100,
-    height: 100,
+    width: 110,
+    height: 140,
     backgroundColor: "#FFFFFF",
     borderRadius: 4,
     marginTop: 10,
@@ -456,8 +457,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flexDirection: "row",
-
-    paddingHorizontal: 16,
+    paddingHorizontal: 3,
     marginTop: 20,
     marginBottom: 15,
   },
@@ -507,6 +507,23 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
+  
+  courseCardYellow: {
+    width: 114,
+    height: 183,
+    borderRadius: 4,
+    backgroundColor: "#FDFFE0",
+    shadowColor: "rgba(0, 0, 0, 0.08)",
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    elevation: 4,
+    marginRight: 10,
+    alignItems: "left",
+    padding: 4,
+    marginBottom: 40,
+  },
+
 
   gradient: {
     flex: 1,

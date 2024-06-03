@@ -83,19 +83,7 @@ const SPSingleGroupLecturer = () => {
             </TouchableOpacity>
 
             <View style={styles.tableHeader}>
-              <Text style={styles.category}>Files & Reports</Text>
-
-              <TouchableOpacity style={styles.whiteFilterButton}>
-                <Text style={styles.whiteFilterButtonText}>Add File +</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.whiteFilterButton}>
-                <Text style={styles.whiteFilterButtonText}>Filter</Text>
-                <MaterialCommunityIcons
-                  name="filter-menu"
-                  size={10}
-                  color="#C8272E"
-                />
-              </TouchableOpacity>
+            <Text style={styles.headingRecText}> Files & Reports</Text>
             </View>
             <View style={styles.card}>
               <ScrollView>
@@ -446,6 +434,13 @@ const styles = StyleSheet.create({
     marginRight: "20%",
     marginLeft: "10%",
     color: "#1F3D75",
+  },
+  headingRecText: {
+    marginLeft:10,
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "left",
+    color: "#C8272E",
   },
 });
 

@@ -96,9 +96,8 @@ const CourseDetailsLecturer = ({ route }) => {
       {!isDrawerOpen && (
         <View style={styles.mainContent}>
           <ScrollView>
-            <Text style={styles.heading}>
-              {response?.courseCode} {response?.courseName}
-            </Text>
+          <Text style={styles.code}>{response?.courseCode}</Text> 
+            <Text style={styles.cName}> {response?.courseName}</Text>
             {/* <Text style={styles.describtion}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -121,7 +120,9 @@ const CourseDetailsLecturer = ({ route }) => {
                 </View>
               </View>
             </TouchableOpacity>
-            <Text style={styles.heading}>Notes & Related Links</Text>
+            <View style={styles.tableHeader}>
+              <Text style={styles.headingRecText}> Notes & Related Files</Text>
+            </View>
 
             {/* <View style={styles.tableHeader}>
               <Text style={styles.category}>Category Name</Text>
@@ -340,7 +341,7 @@ const styles = StyleSheet.create({
     width: 240,
     borderRadius: 4,
     marginTop: 30,
-    marginLeft: "7.5%",
+    marginLeft: "5%",
   },
   textContainer: {
     marginLeft: 10,
@@ -382,6 +383,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(245, 245, 245, 0.32)",
     backgroundColor: "rgba(210, 210, 210, 0.20)",
     marginLeft: 16,
+    marginTop:25,
     borderWidth: 2,
     borderColor: "#E8E8E8",
   },
@@ -491,6 +493,40 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     marginLeft: "7%",
+  },
+  headingRec: {
+    flexShrink: 0,
+    height: 37,
+    backgroundColor: "#E8E8E8",
+    paddingTop: 5,
+    paddingBottom: 2,
+    paddingHorizontal: 15,
+    width: '100%',
+    borderRadius: 4,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  headingRecText: {
+    marginLeft:10,
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "left",
+    color: "#C8272E",
+  },
+  code: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "left",
+    marginTop: 10,
+    padding: 20,
+    color: "#C8272E",
+  },
+  cName: {
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "left",
+    marginLeft: '3.5%',
+    color: "#223F76",
   },
 });
 

@@ -25,7 +25,7 @@ const getToken = async () => {
 const LecturerProfile = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [selectedDay, setSelectedDay] = useState("Mon");
@@ -104,9 +104,10 @@ const LecturerProfile = () => {
       <>
         {/* Timetable for Monday */}
 
-        {courseData?.map((course) => {
+        {courseData?.map((course, index) => {
           return (
-            <View style={styles.redrec} key={course._id}>
+            <View  key={index}
+            style={styles[stylesArr[index % stylesArr.length]]}>
               <Text style={styles.subsubtext}>{course.time}</Text>
               <Text style={styles.subsubredtext}>
                 {course.courseCode} {course.courseName}
