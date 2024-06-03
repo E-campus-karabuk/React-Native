@@ -21,7 +21,7 @@ const getToken = async () => {
 const Home = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
+  const stylesArr = ["redrec", "greenrec", "bluerec", "yellowrec"];
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [lessons, setLessons] = useState(null);
