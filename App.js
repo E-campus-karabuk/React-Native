@@ -24,6 +24,7 @@ import MessagesLecturer from "./screens/Lecturer/messagesLecturer";
 import NotificationsLecturer from "./screens/Lecturer/notificationsLecturer";
 import SPgroupsLecturer from "./screens/Lecturer/SPgroupsLecturer";
 import PublicProfileLec from "./screens/Lecturer/publicProfileLec";
+import RequestDetailScreen from "./screens/requestDetails";
 import Chat from "./screens/Chat";
 import Drawer from "./shared/drawer";
 
@@ -48,6 +49,10 @@ const App = () => {
         <Stack.Screen name="Messages" component={Messages} />
         <Stack.Screen name="CourseDetails" component={CourseDetails} />
         <Stack.Screen name="LecturerProfile" component={LecturerProfile} />
+        <Stack.Screen
+          name="RequestDetailScreen"
+          component={RequestDetailScreen}
+        />
 
         <Stack.Screen name="Drawer" component={Drawer} />
 

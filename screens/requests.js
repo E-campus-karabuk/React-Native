@@ -223,9 +223,15 @@ const Requests = () => {
                 <ScrollView>
                   {currentRequests?.map((request) => (
                     <View style={styles.smallCardBlue}>
-                      <View style={styles.smallCardWhite}>
-                        <Text style={styles.smallCardTextBlue}>Show</Text>
-                      </View>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("RequestDetailScreen")
+                        }
+                      >
+                        <View style={styles.smallCardWhite}>
+                          <Text style={styles.smallCardTextBlue}>Show</Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   ))}
                 </ScrollView>
