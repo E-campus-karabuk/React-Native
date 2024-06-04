@@ -209,9 +209,17 @@ const RequestsLecturer = () => {
                 <ScrollView>
                   {currentRequests?.map((request) => (
                     <View style={styles.smallCardBlue}>
-                      <View style={styles.smallCardWhite}>
-                        <Text style={styles.smallCardTextBlue}>Show</Text>
-                      </View>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("RequestDetailLecturer", {
+                            requestId: request._id,
+                          })
+                        }
+                      >
+                        <View style={styles.smallCardWhite}>
+                          <Text style={styles.smallCardTextBlue}>Show</Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   ))}
                 </ScrollView>
@@ -270,9 +278,17 @@ const RequestsLecturer = () => {
                   <ScrollView>
                     {pastRequests?.map((request) => (
                       <View style={styles.smallCardBlue}>
-                        <View style={styles.smallCardWhite}>
-                          <Text style={styles.smallCardTextBlue}>Show</Text>
-                        </View>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("RequestDetailLecturer", {
+                              requestId: request._id,
+                            })
+                          }
+                        >
+                          <View style={styles.smallCardWhite}>
+                            <Text style={styles.smallCardTextBlue}>Show</Text>
+                          </View>
+                        </TouchableOpacity>
                       </View>
                     ))}
                   </ScrollView>

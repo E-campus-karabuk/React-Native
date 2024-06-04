@@ -25,6 +25,7 @@ import NotificationsLecturer from "./screens/Lecturer/notificationsLecturer";
 import SPgroupsLecturer from "./screens/Lecturer/SPgroupsLecturer";
 import PublicProfileLec from "./screens/Lecturer/publicProfileLec";
 import RequestDetailScreen from "./screens/requestDetails";
+import RequestDetailLecturer from "./screens/Lecturer/requestDetailsLecturer";
 import Chat from "./screens/Chat";
 import Drawer from "./shared/drawer";
 
@@ -79,6 +80,10 @@ const App = () => {
         <Stack.Screen
           name="NotificationsLecturer"
           component={NotificationsLecturer}
+        />
+        <Stack.Screen
+          name="RequestDetailLecturer"
+          component={RequestDetailLecturer}
         />
       </Stack.Navigator>
     </NavigationContainer>

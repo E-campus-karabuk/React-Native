@@ -110,7 +110,7 @@ const CourseDetails = ({ route }) => {
             </View>
             <View style={styles.card}>
               <ScrollView>
-                {response?.notes?.map((note) => {
+                {response?.notes?.map((note, index) => {
                   return (
                     <TouchableOpacity
                       key={index}
