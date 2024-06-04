@@ -204,7 +204,6 @@ tableCardMsgPreview: {
   fontSize: 9,
   textAlign: 'left',
   marginTop:15,
-  marginRight:'15%',
   marginLeft: '10%',
   color: '#1F3D75'
 },
