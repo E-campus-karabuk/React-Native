@@ -115,23 +115,6 @@ export default function RequestDetailScreen({ route }) {
               </View>
             </View>
 
-            {response?.file && (
-              <View style={styles.filesContainer}>
-                <Text style={styles.filesLabel}>Request Files:</Text>
-                <View style={styles.fileCard}>
-                  <View style={styles.fileRow}>
-                    {response?.file?.map((fi, index) => {
-                      <View style={styles.fileItem} key={index}>
-                        <Image
-                          source={require("../assets/pdf.png")}
-                          style={styles.fileImage}
-                        />
-                      </View>;
-                    })}
-                  </View>
-                </View>
-              </View>
-            )}
             <Text style={styles.contentLabel}>Request Content:</Text>
             <View style={styles.contentContainer}>
               <Text style={styles.contentText}>
@@ -142,7 +125,9 @@ export default function RequestDetailScreen({ route }) {
             <Text style={styles.replyLabel}>Reply:</Text>
             <View style={styles.replyContainer}>
               <Text style={styles.replyInput}>
-                {response?.reply ? response?.reply : "No reply available yet"}
+                {response?.receiverReply
+                  ? response?.receiverReply
+                  : "No reply available yet"}
               </Text>
             </View>
           </ScrollView>
