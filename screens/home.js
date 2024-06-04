@@ -21,8 +21,13 @@ const getToken = async () => {
 const Home = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
-  const cardsArr = ["courseCardRed", "courseCardGreen", "courseCardBlue","courseCardYellow"];
+  const stylesArr = ["redrec", "greenrec", "bluerec", "yellowrec"];
+  const cardsArr = [
+    "courseCardRed",
+    "courseCardGreen",
+    "courseCardBlue",
+    "courseCardYellow",
+  ];
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [lessons, setLessons] = useState(null);
@@ -111,15 +116,12 @@ const Home = () => {
                   </Text>
                 </View>
                 <View style={styles.smallcardlessons}>
-                <Text style={styles.lessons}>Lessons</Text>
+                  <Text style={styles.lessons}>Lessons</Text>
                   <ScrollView>
                     {/* TODO: FIX THE COLORS */}
                     {lessons?.map((lesson, index) => {
                       return (
-                        <View
-                          style={styles.whiterec}
-                          key={index}
-                        >
+                        <View style={styles.whiterec} key={index}>
                           <Text style={styles.lessongray}>
                             {lesson.courseName.length > 15
                               ? lesson.courseName.substring(0, 15) + "..."
@@ -507,7 +509,7 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
-  
+
   courseCardYellow: {
     width: 114,
     height: 183,
@@ -523,7 +525,6 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
-
 
   gradient: {
     flex: 1,
