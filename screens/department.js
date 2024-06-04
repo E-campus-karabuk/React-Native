@@ -167,15 +167,34 @@ const Department = () => {
               </View>
             </View>
             <Text style={styles.heading}>Instructors</Text>
-
+            <View style={styles.lecturerCard}>
+              <Image
+                source={require("../assets/profile-user.png")}
+                style={styles.avatar}
+              />
+              <Text style={styles.lecturerText}>
+                {response?.departmentHead?.firstName}{" "}
+                {response?.departmentHead?.lastName}
+              </Text>
+              <Text style={styles.lecturerPosition}>
+                Head of the department
+              </Text>
+            </View>
             <View style={styles.lecturersContainer}>
               {response?.workers?.map((worker) => {
                 return (
                   <View style={styles.lecturerCard} key={worker._id}>
-                    <Image
-                      source={require("../assets/profile-user.png")}
-                      style={styles.avatar}
-                    />
+                    {worker.sex == "male" ? (
+                      <Image
+                        source={require("../assets/profile-user.png")}
+                        style={styles.avatar}
+                      />
+                    ) : (
+                      <Image
+                        source={require("../assets/avatar-girl.png")}
+                        style={styles.avatar}
+                      />
+                    )}
                     <Text style={styles.lecturerText}>{worker.name}</Text>
                     <Text style={styles.lecturerPosition}>
                       {worker.position}
@@ -189,7 +208,7 @@ const Department = () => {
               <Text style={styles.whiteHeading}>Secretary</Text>
               <View style={styles.lecturerCard}>
                 <Image
-                  source={require("../assets/avatar-girl.png")}
+                  source={require("../assets/profile-user.png")}
                   style={styles.avatar}
                 />
                 <Text style={styles.lecturerTextWhite}>
@@ -228,13 +247,15 @@ const Department = () => {
                       return (
                         <View style={styles.smester} key={course._id}>
                           <View style={styles.ClassCardContainer}>
-                              <View style={styles.semsterClassCardRed}>
+                            <View style={styles.semsterClassCardRed}>
                               <Text style={styles.semesterHeading}>
-                                  {course.name}
-                                 </Text>
-                                <Text style={styles.semesterHeading}>{course.code}</Text>
-                              </View>
+                                {course.name}
+                              </Text>
+                              <Text style={styles.semesterHeading}>
+                                {course.code}
+                              </Text>
                             </View>
+                          </View>
                         </View>
                       );
                   })}
@@ -271,10 +292,12 @@ const Department = () => {
                           <View style={styles.smester} key={course._id}>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                              <Text style={styles.semesterHeading}>
+                                <Text style={styles.semesterHeading}>
                                   {course.name}
-                                 </Text>
-                                <Text style={styles.semesterHeading}>{course.code}</Text>
+                                </Text>
+                                <Text style={styles.semesterHeading}>
+                                  {course.code}
+                                </Text>
                               </View>
                             </View>
                           </View>
@@ -312,10 +335,12 @@ const Department = () => {
                           <View style={styles.smester} key={course._id}>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                              <Text style={styles.semesterHeading}>
+                                <Text style={styles.semesterHeading}>
                                   {course.name}
-                                 </Text>
-                                <Text style={styles.semesterHeading}>{course.code}</Text>
+                                </Text>
+                                <Text style={styles.semesterHeading}>
+                                  {course.code}
+                                </Text>
                               </View>
                             </View>
                           </View>
@@ -353,10 +378,12 @@ const Department = () => {
                           <View style={styles.smester} key={course._id}>
                             <View style={styles.ClassCardContainer}>
                               <View style={styles.semsterClassCardRed}>
-                                 <Text style={styles.semesterHeading}>
+                                <Text style={styles.semesterHeading}>
                                   {course.name}
-                                 </Text>
-                                <Text style={styles.semesterHeading}>{course.code}</Text>
+                                </Text>
+                                <Text style={styles.semesterHeading}>
+                                  {course.code}
+                                </Text>
                               </View>
                             </View>
                           </View>
@@ -392,7 +419,7 @@ const Department = () => {
 
             <View style={styles.lecturerCard}>
               <Image
-                source={require("../assets/avatar-girl.png")}
+                source={require("../assets/profile-user.png")}
                 style={styles.avatar}
               />
               <Text style={styles.lecturerText}>Dr. Isa Avci</Text>
@@ -571,7 +598,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     color: "#223F76",
-    paddingHorizontal:'5%'
+    paddingHorizontal: "5%",
   },
   lecturerPosition: {
     fontSize: 10,
@@ -593,9 +620,9 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   lecturerCard: {
-    width:100,
-    marginHorizontal: 'auto',
-    marginVertical:'5%',
+    width: 100,
+    marginHorizontal: "auto",
+    marginVertical: "5%",
     alignItems: "center",
   },
   lecturersContainer: {
@@ -666,7 +693,7 @@ const styles = StyleSheet.create({
   },
   dropdownContent: {
     top: 10,
-    width: 'auto',
+    width: "auto",
     padding: 10,
     zIndex: 1,
     flexDirection: "row",
@@ -696,8 +723,8 @@ const styles = StyleSheet.create({
   },
 
   semsterClassCardRed: {
-    width: 'auto',
-    height: 'auto',
+    width: "auto",
+    height: "auto",
     borderRadius: 4,
     backgroundColor: "#FFFFFF",
     shadowColor: "rgba(0, 0, 0, 0.08)",
