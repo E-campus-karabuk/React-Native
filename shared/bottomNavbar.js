@@ -25,6 +25,7 @@ const BottomNavbar = ({ setIsDrawerOpen, isLecturer }) => {
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [role, setRole] = useState(null);
+  const [notCount, setNotCount] = useState(null);
 
   const handlerRole = async () => {
     const role = await getRole();
@@ -60,6 +61,18 @@ const BottomNavbar = ({ setIsDrawerOpen, isLecturer }) => {
     fetchTokenAndNotis();
   }, [token]);
 
+  useLayoutEffect(() => {
+    const countNotifications = () => {
+      if (response) {
+        const unreadNotifications = response.noti.filter(
+          (notification) => notification.status === "unread"
+        );
+        setNotCount(unreadNotifications.length);
+        return unreadNotifications.length;
+      }
+    };
+    countNotifications();
+  }, []);
   const handleBottomNavBar = (screenIdentifier) => {
     const screenName = isLecturer
       ? `${screenIdentifier}Lecturer`

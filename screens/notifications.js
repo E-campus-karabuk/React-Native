@@ -49,6 +49,31 @@ const Notifications = () => {
       }
     };
 
+    const changeStatusOfNotis = async () => {
+      try {
+        const token = await getToken();
+
+        setToken(token); // Store token in state
+
+        if (token) {
+          const { data } = await axios.get(
+            `${process.env.EXPO_PUBLIC_API_URL}/api/notification/status`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          //  console.log(data);
+          setResponse(data);
+        }
+      } catch (error) {
+        console.log({ errorOfChangeStatus: error.message });
+      }
+    };
+
+    changeStatusOfNotis();
     fetchTokenAndNotis();
   }, [token]);
 
