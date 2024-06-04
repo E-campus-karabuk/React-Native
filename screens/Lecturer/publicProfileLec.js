@@ -29,7 +29,7 @@ const PublicProfileLec = ({ route }) => {
   const { lecId } = route.params;
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
-  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
+  const stylesArr = ["redrec", "greenrec", "bluerec", "yellowrec"];
   useLayoutEffect(() => {
     const fetchTokenAndProfile = async () => {
       try {
@@ -114,8 +114,10 @@ const PublicProfileLec = ({ route }) => {
 
         {courseData?.map((course, index) => {
           return (
-            <View key={index}
-            style={styles[stylesArr[index % stylesArr.length]]}>
+            <View
+              key={index}
+              style={styles[stylesArr[index % stylesArr.length]]}
+            >
               <Text style={styles.subsubtext}>{course.time}</Text>
               <Text style={styles.subsubredtext}>
                 {course.courseCode} {course.courseName}
@@ -159,8 +161,7 @@ const PublicProfileLec = ({ route }) => {
             <View style={styles.majorRec}>
               <Text style={styles.majorRecText}>
                 <FontAwesome name="graduation-cap" size={20} color="white" />
-                {response?.data?.departmentId?.name} -{" "}
-                {response?.data?.departmentId?.faculty?.name}
+                {response?.data?.graduatedUni}
               </Text>
             </View>
 

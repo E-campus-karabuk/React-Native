@@ -222,7 +222,7 @@ const Requests = () => {
                 </View>
                 <ScrollView>
                   {currentRequests?.map((request) => (
-                    <View style={styles.smallCardBlue}>
+                    <View style={styles.smallCardBlue} key={request._id}>
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate("RequestDetailScreen", {
@@ -292,10 +292,18 @@ const Requests = () => {
                   </View>
                   <ScrollView>
                     {pastRequests?.map((request) => (
-                      <View style={styles.smallCardBlue}>
-                        <View style={styles.smallCardWhite}>
-                          <Text style={styles.smallCardTextBlue}>Show</Text>
-                        </View>
+                      <View style={styles.smallCardBlue} key={request._id}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("RequestDetailScreen", {
+                              requestId: request._id,
+                            })
+                          }
+                        >
+                          <View style={styles.smallCardWhite}>
+                            <Text style={styles.smallCardTextBlue}>Show</Text>
+                          </View>
+                        </TouchableOpacity>
                       </View>
                     ))}
                   </ScrollView>
