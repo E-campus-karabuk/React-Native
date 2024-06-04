@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: 360,
     height: 322,
-    backgroundColor: "#E8E8E8",
+    backgroundColor: "#f8f8f8",
     borderRadius: 4,
     shadowOpacity: 50,
     shadowOffset: 60,

@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   membersContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    justifyContent: "center",
+    alignItems: "left",
     marginLeft: 10,
   },
   navBar: {
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   courseCardRed: {
     width: 340,
-    minHeight: 129,
+    minHeight: 150,
     borderRadius: 4,
     backgroundColor: "#FFE6E6",
     shadowColor: "rgba(0, 0, 0, 0.08)",

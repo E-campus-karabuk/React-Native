@@ -160,14 +160,14 @@ const RequestsLecturer = () => {
             <Text style={styles.heading}>Requests</Text>
             <View style={styles.tableHeader}>
               <Text style={styles.headerTitle}>Active Requests</Text>
-              <View style={styles.whiteFilterButton}>
+              {/* <View style={styles.whiteFilterButton}>
                 <Text style={styles.whiteFilterButtonText}>Filter</Text>
                 <MaterialCommunityIcons
                   name="filter-menu"
                   size={10}
                   color="#C8272E"
                 />
-              </View>
+              </View> */}
             </View>
             <View style={styles.card}>
               <View style={styles.courseCardRed}>
@@ -219,14 +219,14 @@ const RequestsLecturer = () => {
             </View>
             <View style={styles.tableHeader}>
               <Text style={styles.headerTitle2}>Past Requests</Text>
-              <View style={styles.whiteFilterButton}>
+              {/* <View style={styles.whiteFilterButton}>
                 <Text style={styles.whiteFilterButtonText}>Filter</Text>
                 <MaterialCommunityIcons
                   name="filter-menu"
                   size={10}
                   color="#C8272E"
                 />
-              </View>
+              </View> */}
             </View>
             <View style={styles.card2}>
               <ScrollView horizontal={true}>
