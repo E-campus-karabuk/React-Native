@@ -159,12 +159,16 @@ const CourseDetailsLecturer = ({ route }) => {
                 {response?.notes?.map((note) => {
                   return (
                     <TouchableOpacity
+                      key={index}
                       style={styles.smallcard}
-                      onPress={() =>
-                        handlePress(
-                          `${process.env.EXPO_PUBLIC_API_URL}/${note.file}`
-                        )
-                      }
+                      onPress={() => {
+                        const fixedURL =
+                          `${process.env.EXPO_PUBLIC_API_URL}/${note?.file}`.replace(
+                            /\\/g,
+                            "/"
+                          );
+                        Linking.openURL(fixedURL);
+                      }}
                     >
                       <Image
                         source={require("../../assets/pdf.png")}

@@ -25,7 +25,7 @@ const getToken = async () => {
 const LecturerProfile = () => {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const stylesArr = ["redrec", "greenrec", "bluerec","yellowrec"];
+  const stylesArr = ["redrec", "greenrec", "bluerec", "yellowrec"];
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
   const [selectedDay, setSelectedDay] = useState("Mon");
@@ -73,7 +73,7 @@ const LecturerProfile = () => {
             }
           );
           setCourseData(data);
-          console.log({ courses: data });
+          // console.log({ courses: data });
         }
       } catch (error) {
         console.log({ erorr: error.message });
@@ -106,8 +106,10 @@ const LecturerProfile = () => {
 
         {courseData?.map((course, index) => {
           return (
-            <View  key={index}
-            style={styles[stylesArr[index % stylesArr.length]]}>
+            <View
+              key={index}
+              style={styles[stylesArr[index % stylesArr.length]]}
+            >
               <Text style={styles.subsubtext}>{course.time}</Text>
               <Text style={styles.subsubredtext}>
                 {course.courseCode} {course.courseName}

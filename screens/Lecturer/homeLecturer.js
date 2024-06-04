@@ -160,7 +160,7 @@ const HomeLecturer = () => {
                       style={styles.courseCardRed}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
-                          courseId: "MAT202",
+                          courseId: lesson._id,
                           courseName: "Mathematics",
                           instructor: "Dr. Alex",
                         })

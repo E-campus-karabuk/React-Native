@@ -40,7 +40,7 @@ const Drawer = ({ isDrawerOpen, setIsDrawerOpen, isLecturer }) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false); // Close the drawer after navigating
   };
-  console.log({ role });
+
   return (
     <View style={styless.container}>
       <View style={styless.navBar}>

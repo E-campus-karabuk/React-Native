@@ -40,11 +40,11 @@ const Login = ({ navigation }) => {
 
       await SecureStore.setItemAsync("token", JSON.stringify(data?.token));
       await SecureStore.setItemAsync("role", JSON.stringify(data?.role));
-      console.log(data?.role);
+      // console.log(data?.role);
       navigation.navigate("Home");
     } catch (error) {
       console.log({ error: error.message });
-      console.log(process.env.EXPO_PUBLIC_API_URL);
+      // console.log(process.env.EXPO_PUBLIC_API_URL);
     }
   };
 

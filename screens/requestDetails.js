@@ -34,7 +34,7 @@ export default function RequestDetailScreen({ route }) {
       try {
         const token = await getToken();
         setToken(token);
-        console.log({ requestId });
+        // console.log({ requestId });
         if (token) {
           const { data } = await axios.get(
             `${process.env.EXPO_PUBLIC_API_URL}/api/request/single/student/${requestId}`,
@@ -55,7 +55,7 @@ export default function RequestDetailScreen({ route }) {
     fetchTokenAndData();
   }, [token]);
 
-  console.log({ responseReq: response });
+  // console.log({ responseReq: response });
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
