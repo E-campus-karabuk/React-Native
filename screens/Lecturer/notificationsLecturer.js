@@ -98,7 +98,7 @@ const NotificationsLecturer = () => {
       {!isDrawerOpen && (
         <View style={styles.mainContent}>
           <Text style={styles.heading}>Notifications</Text>
-          <View style={styles.tableHeaderNotification}>
+          {/* <View style={styles.tableHeaderNotification}>
             <TouchableOpacity style={styles.whiteFilterButtonNotification}>
               <Text style={styles.whiteFilterButtonTextNotification}>
                 Filter
@@ -119,7 +119,7 @@ const NotificationsLecturer = () => {
                 Unread
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <ScrollView>
             {response?.noti?.map((notification) => {

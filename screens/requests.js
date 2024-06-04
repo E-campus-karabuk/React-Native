@@ -151,7 +151,7 @@ const Requests = () => {
             </View>
             <View style={styles.tableHeader}>
               <Text style={styles.headerTitle}>Active Requests</Text>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.whiteFilterButton}
                 onPress={() => setShowPicker(!showPicker)}
               >
@@ -161,7 +161,7 @@ const Requests = () => {
                   size={20} // Adjust size if needed
                   color="#C8272E"
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               {/* TODO: ADD THE FILTERING */}
               {/* TODO: ADD THE PAGINATION */}
@@ -241,14 +241,14 @@ const Requests = () => {
             </View>
             <View style={styles.tableHeader}>
               <Text style={styles.headerTitle}>Past Requests</Text>
-              <View style={styles.whiteFilterButton}>
+              {/* <View style={styles.whiteFilterButton}>
                 <Text style={styles.whiteFilterButtonText}>Filter</Text>
                 <MaterialCommunityIcons
                   name="filter-menu"
                   size={10}
                   color="#C8272E"
                 />
-              </View>
+              </View> */}
             </View>
 
             <View style={styles.card2}>

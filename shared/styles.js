@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     marginBottom:80
   },
   heading: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'left',
     marginTop: 10,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginLeft: 16
   },
   smallcard: {  
-     marginTop:6,
+    marginTop:6,
     alignSelf:'center',
     flexDirection:'row',
     width: 340,
@@ -173,9 +173,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 4,
     marginBottom:7,
-    paddingHorizontal:5,
-    
+    paddingHorizontal:5, 
  },
+ smallcardNoti: {  
+  marginTop:6,
+  alignSelf:'center',
+  flexDirection:'row',
+  width: 340,
+  height: 86,
+  backgroundColor: '#ffffff',
+  borderRadius: 4,
+  marginBottom:7,
+  paddingRight:'20%',
+  paddingLeft:'2%' 
+},
  ProfilePicIcon: {
   width: 70, 
   height: 70, 
@@ -239,7 +250,6 @@ notificationTime: {
   fontSize: 9,
   textAlign: 'left',
   marginTop:20,
-  marginLeft:'25%',
   color: '#1F3D75'
 },
 

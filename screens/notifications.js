@@ -122,7 +122,7 @@ const Notifications = () => {
       {!isDrawerOpen && (
         <View style={styles.mainContent}>
           <Text style={styles.heading}>Notifications</Text>
-          <View style={styles.tableHeaderNotification}>
+          {/* <View style={styles.tableHeaderNotification}>
             <TouchableOpacity style={styles.whiteFilterButtonNotification}>
               <Text style={styles.whiteFilterButtonTextNotification}>
                 Filter
@@ -143,13 +143,14 @@ const Notifications = () => {
                 Unread
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
+<View style={styles.card}>
           <ScrollView>
             {response?.noti?.map((notification) => {
               return (
                 <TouchableOpacity
-                  style={styles.smallcard}
+                  style={styles.smallcardNoti}
                   key={notification._id}
                 >
                   <Image
@@ -176,6 +177,7 @@ const Notifications = () => {
               );
             })}
           </ScrollView>
+          </View>
         </View>
       )}
       {!isDrawerOpen && (
