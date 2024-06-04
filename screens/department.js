@@ -173,7 +173,7 @@ const Department = () => {
                 style={styles.avatar}
               />
               <Text style={styles.lecturerText}>
-                {response?.departmentHead?.firstName}{" "}
+                {response?.departmentHead?.firstName}
                 {response?.departmentHead?.lastName}
               </Text>
               <Text style={styles.lecturerPosition}>
