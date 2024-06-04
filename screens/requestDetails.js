@@ -115,7 +115,7 @@ export default function RequestDetailScreen({ route }) {
               </View>
             </View>
 
-            {response?.files && (
+            {response?.file && (
               <View style={styles.filesContainer}>
                 <Text style={styles.filesLabel}>Request Files:</Text>
                 <View style={styles.fileCard}>
@@ -135,15 +135,14 @@ export default function RequestDetailScreen({ route }) {
             <Text style={styles.contentLabel}>Request Content:</Text>
             <View style={styles.contentContainer}>
               <Text style={styles.contentText}>
-                {response?.content || "No content available"}
+                {response?.content ? response.content : "No content available"}
               </Text>
             </View>
 
             <Text style={styles.replyLabel}>Reply:</Text>
             <View style={styles.replyContainer}>
               <Text style={styles.replyInput}>
-                {response?.reply ||
-                  "No reply available from the lecturer yet.."}
+                {response?.reply ? response?.reply : "No reply available yet"}
               </Text>
             </View>
           </ScrollView>
