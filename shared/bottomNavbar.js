@@ -11,13 +11,26 @@ import * as SecureStore from "expo-secure-store";
 
 const getToken = async () => {
   const token = await SecureStore.getItemAsync("token");
+
   return JSON.parse(token);
+};
+
+const getRole = async () => {
+  const role = await SecureStore.getItemAsync("role");
+  return JSON.parse(role);
 };
 
 const BottomNavbar = ({ setIsDrawerOpen, isLecturer }) => {
   const navigation = useNavigation();
   const [token, setToken] = useState(null);
   const [response, setResponse] = useState(null);
+  const [role, setRole] = useState(null);
+
+  const handlerRole = async () => {
+    const role = await getRole();
+    if (role[0] === "Academician") setRole("Lecturer");
+  };
+  handlerRole();
 
   useLayoutEffect(() => {
     const fetchTokenAndNotis = async () => {
@@ -80,7 +93,13 @@ const BottomNavbar = ({ setIsDrawerOpen, isLecturer }) => {
             style={styless.bottomNavBarContent}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleBottomNavBar("Profile")}>
+        <TouchableOpacity
+          onPress={() =>
+            handleBottomNavBar(
+              `${role == "Lecturer" ? "ProfileLecturer" : "Profile"}`
+            )
+          }
+        >
           <FontAwesome6
             name="user-large"
             size={20}
