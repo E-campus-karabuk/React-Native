@@ -58,7 +58,6 @@ const PublicProfileLec = ({ route }) => {
     fetchTokenAndProfile();
   }, [token]);
 
-  console.log({ response });
   const [selectedDay, setSelectedDay] = useState("Mon");
   const [courseData, setCourseData] = useState(null);
 

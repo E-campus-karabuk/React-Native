@@ -30,7 +30,12 @@ const CoursesLecturer = () => {
   const [response, setResponse] = useState(null);
   const [currentCourses, setCurrentCourses] = useState(null);
   const [pastCourses, setPastCourses] = useState(null);
-  const cardsArr = ["courseCardRed", "courseCardGreen", "courseCardBlue","courseCardYellow"];
+  const cardsArr = [
+    "courseCardRed",
+    "courseCardGreen",
+    "courseCardBlue",
+    "courseCardYellow",
+  ];
 
   useLayoutEffect(() => {
     const fetchTokenAndCourses = async () => {
@@ -60,7 +65,6 @@ const CoursesLecturer = () => {
     fetchTokenAndCourses();
   }, [token]);
 
-  console.log(currentCourses);
   // PasCourses
   useLayoutEffect(() => {
     const fetchTokenAndPastCourses = async () => {
@@ -125,11 +129,11 @@ const CoursesLecturer = () => {
               contentContainerStyle={{ paddingHorizontal: 20 }}
             >
               <View style={styles.cardContainer}>
-                {currentCourses?.map((course,index) => {
+                {currentCourses?.map((course, index) => {
                   return (
                     <TouchableOpacity
-                    key={index}
-                    style={styles[cardsArr[index % cardsArr.length]]}
+                      key={index}
+                      style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetailsLecturer", {
                           courseId: course._id,
@@ -166,8 +170,8 @@ const CoursesLecturer = () => {
                 {pastCourses?.map((course, index) => {
                   return (
                     <TouchableOpacity
-                    key={index}
-                    style={styles[cardsArr[index % cardsArr.length]]}
+                      key={index}
+                      style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetailsLecturer", {
                           courseId: course._id,
@@ -378,7 +382,7 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
-  
+
   courseCardYellow: {
     width: 114,
     height: 183,
@@ -394,7 +398,6 @@ const styles = StyleSheet.create({
     padding: 4,
     marginBottom: 40,
   },
-
 
   gradient: {
     flex: 1,
@@ -433,7 +436,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 2,
     paddingHorizontal: 15,
-    width: '100%',
+    width: "100%",
     borderRadius: 4,
     marginTop: 20,
     marginBottom: 10,

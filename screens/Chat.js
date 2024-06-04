@@ -82,12 +82,12 @@ const Chat = () => {
       fetchAndSendMessage();
     }
   }, [isFinished]);
-  console.log({ response });
+  // console.log({ response });
 
   const handleMessageChange = (text) => {
     setMessage(text);
     setPrompt(text);
-    console.log({ prompt });
+    // console.log({ prompt });
   };
 
   const sendMessage = () => {

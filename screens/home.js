@@ -165,7 +165,7 @@ const Home = () => {
                       style={styles[cardsArr[index % cardsArr.length]]}
                       onPress={() =>
                         navigation.navigate("CourseDetails", {
-                          courseId: "MAT202",
+                          courseId: lesson._id,
                           courseName: "Mathematics",
                           instructor: "Dr. Alex",
                         })
