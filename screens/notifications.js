@@ -145,38 +145,38 @@ const Notifications = () => {
             </TouchableOpacity>
           </View> */}
 
-<View style={styles.card}>
-          <ScrollView>
-            {response?.noti?.map((notification) => {
-              return (
-                <TouchableOpacity
-                  style={styles.smallcardNoti}
-                  key={notification._id}
-                >
-                  <Image
-                    source={require("../assets/profile-user.png")}
-                    style={styles.ProfilePicIcon}
-                  />
-                  <View style={styles.textContainerTable}>
-                    <Text style={styles.tableCardHeading}>
-                      {notification.title}
-                    </Text>
-                    <Text style={styles.tableCardMsgPreview}>
-                      {notification.content}..
-                    </Text>
-                  </View>
-
-                  <View style={styles.textContainerTable}>
-                    <View style={styles.cardIconTable}>
-                      <Text style={styles.notificationTime}>
-                        {getTimeAgo(notification.createdAt)}
+          <View>
+            <ScrollView>
+              {response?.noti?.map((notification) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.smallcardNoti}
+                    key={notification._id}
+                  >
+                    <Image
+                      source={require("../assets/profile-user.png")}
+                      style={styles.ProfilePicIcon}
+                    />
+                    <View style={styles.textContainerTable}>
+                      <Text style={styles.tableCardHeading}>
+                        {notification.title}
+                      </Text>
+                      <Text style={styles.tableCardMsgPreview}>
+                        {notification.content}..
                       </Text>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+
+                    <View style={styles.textContainerTable}>
+                      <View style={styles.cardIconTable}>
+                        <Text style={styles.notificationTime}>
+                          {getTimeAgo(notification.createdAt)}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
           </View>
         </View>
       )}
